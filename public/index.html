@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow // Premium Todo Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-decor">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+    
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-main">
+                <h1>TaskFlow</h1>
+                <span class="badge">v1.0</span>
+            </div>
+            <p class="subtitle">Organize your thoughts, elevate your productivity.</p>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <span class="stat-val" id="total-count">0</span>
+                    <span class="stat-lbl">Total Tasks</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-val" id="completed-count">0</span>
+                    <span class="stat-lbl">Completed</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-val" id="pending-count">0</span>
+                    <span class="stat-lbl">Pending</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-content">
+            <form id="todo-form" class="todo-input-group">
+                <input type="text" id="todo-input" placeholder="What needs to be done?" required autocomplete="off">
+                <button type="submit" aria-label="Add Task">
+                    <i class="fa-solid fa-plus"></i> Add
+                </button>
+            </form>
+
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="pending">Pending</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+            </div>
+
+            <div class="list-wrapper">
+                <ul id="todo-list" class="todo-list">
+                    <!-- Todos injected here -->
+                </ul>
+                <div id="empty-state" class="empty-state">
+                    <div class="empty-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                    <p>No tasks found. Create one to get started!</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
