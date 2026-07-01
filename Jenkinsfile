@@ -16,19 +16,19 @@ pipeline {
 
     stage('Install dependencies') {
       steps {
-        sh 'npm install'
+        bat 'npm install'
       }
     }
 
     stage('Test') {
       steps {
-        sh 'npm test'
+        bat 'npm test'
       }
     }
 
     stage('Build Docker image') {
       steps {
-        sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -t ${IMAGE_NAME}:latest ."
+        bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -t ${IMAGE_NAME}:latest ."
       }
     }
 
