@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/server.js",
   "scripts": {
-    "test":  "echo No tests yet",
+    "test": "echo No tests yet",
     "start": "node src/server.js"
   },
   "dependencies": {
