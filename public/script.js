@@ -8,6 +8,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const pendingCountEl = document.getElementById('pending-count');
     const filterButtons = document.querySelectorAll('.filter-btn');
     const toastContainer = document.getElementById('toast-container');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+
+    // Theme Management
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    let currentTheme = savedTheme || (systemPrefersLight ? 'light' : 'dark');
+
+    function applyTheme(theme) {
+        if (theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeToggleBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            themeToggleBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+        }
+        localStorage.setItem('theme', theme);
+    }
+
+    applyTheme(currentTheme);
+
+    themeToggleBtn.addEventListener('click', () => {
+        currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+        applyTheme(currentTheme);
+    });
 
     let todos = [];
     let currentFilter = 'all';

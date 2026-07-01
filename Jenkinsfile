@@ -6,6 +6,8 @@ pipeline {
         IMAGE_TAG = "${env.BUILD_NUMBER}"
         DOCKERHUB_USER = "sangambuild"
         CONTAINER_NAME = "todo-container"
+        HOST_PORT = "3001"
+        CONTAINER_PORT = "3000"
     }
 
     stages {
@@ -60,7 +62,7 @@ pipeline {
                 bat """
                 docker stop %CONTAINER_NAME% 2>nul || exit /b 0
                 docker rm %CONTAINER_NAME% 2>nul || exit /b 0
-                docker run -d --name %CONTAINER_NAME% -p 3000:3000 %DOCKERHUB_USER%/%IMAGE_NAME%:latest
+                docker run -d --name %CONTAINER_NAME% -p %HOST_PORT%:%CONTAINER_PORT% %DOCKERHUB_USER%/%IMAGE_NAME%:latest
                 """
             }
         }
@@ -69,6 +71,7 @@ pipeline {
     post {
         success {
             echo "Build #${IMAGE_TAG} succeeded."
+            echo "Application available at http://localhost:${HOST_PORT}"
         }
 
         failure {
