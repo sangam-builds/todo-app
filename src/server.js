@@ -28,4 +28,5 @@ const startServer = async () => {
   }
 };
 
+// Start the Express server and database connection
 startServer();

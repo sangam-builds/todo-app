@@ -9,9 +9,25 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  googleId     String?  @unique
+  picture      String?
+  accessToken  String?
+  refreshToken String?
+  todos        Todo[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 model Todo {
-  id        Int      @id @default(autoincrement())
-  title     String
-  completed Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  title           String
+  completed       Boolean  @default(false)
+  calendarEventId String?
+  createdAt       DateTime @default(now())
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id])
 }

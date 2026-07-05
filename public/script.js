@@ -33,6 +33,87 @@ document.addEventListener('DOMContentLoaded', () => {
         applyTheme(currentTheme);
     });
 
+    const googleSyncBtn = document.getElementById('google-sync');
+    const userProfileEl = document.getElementById('user-profile');
+    const userAvatarEl = document.getElementById('user-avatar');
+    const userNameEl = document.getElementById('user-name');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // Modal Elements
+    const signupModal = document.getElementById('signup-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const googleSignupBtn = document.getElementById('google-signup-btn');
+
+    let isAuthenticated = false;
+
+    function openSignupModal() {
+        signupModal.classList.remove('hidden');
+    }
+
+    function closeSignupModal() {
+        signupModal.classList.add('hidden');
+    }
+
+    closeModalBtn.addEventListener('click', closeSignupModal);
+    signupModal.addEventListener('click', (e) => {
+        if (e.target === signupModal) {
+            closeSignupModal();
+        }
+    });
+
+    googleSignupBtn.addEventListener('click', () => {
+        window.location.href = '/api/auth/google';
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !signupModal.classList.contains('hidden')) {
+            closeSignupModal();
+        }
+    });
+
+    // Redirect to Google login flow
+    googleSyncBtn.addEventListener('click', () => {
+        window.location.href = '/api/auth/google';
+    });
+
+    // Handle logout action
+    logoutBtn.addEventListener('click', async () => {
+        try {
+            const response = await fetch('/api/auth/logout', { method: 'POST' });
+            if (response.ok) {
+                showToast('Successfully logged out');
+                await checkSession();
+                fetchTodos(); // Reload tasks under anonymous state
+            }
+        } catch (error) {
+            console.error('Logout failed:', error);
+            showToast('Error during logout', 'error');
+        }
+    });
+
+    // Session status validation
+    async function checkSession() {
+        try {
+            const response = await fetch('/api/auth/me');
+            const data = await response.json();
+            if (data.authenticated) {
+                googleSyncBtn.classList.add('hidden');
+                userProfileEl.classList.remove('hidden');
+                userNameEl.textContent = `Hi, ${data.user.name.split(' ')[0]}`;
+                userAvatarEl.src = data.user.picture || 'https://lh3.googleusercontent.com/a/default-user=s80-c';
+                userAvatarEl.style.display = 'block';
+                isAuthenticated = true;
+            } else {
+                googleSyncBtn.classList.remove('hidden');
+                userProfileEl.classList.add('hidden');
+                isAuthenticated = false;
+            }
+        } catch (error) {
+            console.error('Session check failed:', error);
+            isAuthenticated = false;
+        }
+    }
+
     let todos = [];
     let currentFilter = 'all';
 
@@ -210,6 +291,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form submission
     todoForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        
+        if (!isAuthenticated) {
+            openSignupModal();
+            return;
+        }
+
         const title = todoInput.value.trim();
         if (title) {
             addTodo(title);
@@ -228,5 +315,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initial load
-    fetchTodos();
+    async function init() {
+        await checkSession();
+        fetchTodos();
+    }
+    init();
 });

@@ -18,9 +18,22 @@
     
     <div class="app-container">
         <header class="app-header">
-            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
-                <i class="fa-solid fa-moon"></i>
-            </button>
+            <div class="header-actions">
+                <button id="google-sync" class="google-sync-btn" aria-label="Sync with Google">
+                    <i class="fa-brands fa-google"></i>
+                    <span>Sync with Google</span>
+                </button>
+                <div id="user-profile" class="user-profile hidden">
+                    <img id="user-avatar" src="" alt="User Avatar" class="user-avatar">
+                    <span id="user-name" class="user-name"></span>
+                    <button id="logout-btn" class="logout-btn" aria-label="Sign Out" title="Sign Out">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
             <div class="header-main">
                 <h1>TaskFlow</h1>
                 <span class="badge">v1.0</span>
@@ -67,6 +80,23 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <div id="signup-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="close-modal" class="close-modal-btn" aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-icon">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <h2>Join TaskFlow</h2>
+            <p>Sign up or log in to unlock personal task management and synchronization.</p>
+            <button id="google-signup-btn" class="google-signup-btn">
+                <i class="fa-brands fa-google"></i>
+                <span>Continue with Google</span>
+            </button>
+        </div>
     </div>
 
     <div id="toast-container" class="toast-container"></div>
