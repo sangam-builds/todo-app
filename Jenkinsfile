@@ -5,6 +5,7 @@ pipeline {
         IMAGE_NAME = "todo-app"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
         DOCKERHUB_USER = "sangambuild"
+
         CONTAINER_NAME = "todo-container"
         HOST_PORT = "3001"
         CONTAINER_PORT = "3000"
@@ -12,9 +13,27 @@ pipeline {
 
     stages {
 
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
-                bat 'npm install'
+                bat 'npm ci'
+            }
+        }
+
+        stage('Generate Prisma Client') {
+            steps {
+                bat 'npx prisma generate'
             }
         }
 
@@ -33,7 +52,7 @@ pipeline {
                         passwordVariable: 'DOCKER_PASS'
                     )
                 ]) {
-                    bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
+                    bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
                 }
             }
         }
@@ -60,9 +79,13 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 bat """
-                docker stop %CONTAINER_NAME% 2>nul || exit /b 0
-                docker rm %CONTAINER_NAME% 2>nul || exit /b 0
-                docker run -d --name %CONTAINER_NAME% -p %HOST_PORT%:%CONTAINER_PORT% %DOCKERHUB_USER%/%IMAGE_NAME%:latest
+                docker stop %CONTAINER_NAME% 2>nul
+                docker rm %CONTAINER_NAME% 2>nul
+
+                docker run -d ^
+                --name %CONTAINER_NAME% ^
+                -p %HOST_PORT%:%CONTAINER_PORT% ^
+                %DOCKERHUB_USER%/%IMAGE_NAME%:latest
                 """
             }
         }
