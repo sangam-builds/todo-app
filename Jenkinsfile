@@ -9,8 +9,6 @@ pipeline {
         CONTAINER_NAME = "todo-container"
         HOST_PORT = "3001"
         CONTAINER_PORT = "3000"
-
-        DOCKER_NETWORK = "todo-network"
     }
 
     stages {
@@ -79,22 +77,12 @@ pipeline {
                 """
             }
         }
-
-        stage('Deploy Container') {
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
-                    bat """
-                    ssh -o StrictHostKeyChecking=no -i "%SSH_KEY%" %SSH_USER%@13.60.95.90 "docker pull %DOCKERHUB_USER%/%IMAGE_NAME%:latest && docker stop %CONTAINER_NAME% || true && docker rm %CONTAINER_NAME% || true && docker run -d --name %CONTAINER_NAME% --network %DOCKER_NETWORK% -p %HOST_PORT%:%CONTAINER_PORT% --env-file .env %DOCKERHUB_USER%/%IMAGE_NAME%:latest"
-                    """
-                }
-            }
-        }
     }
 
     post {
         success {
-            echo "Build #${IMAGE_TAG} succeeded."
-            echo "Application available at http://localhost:${HOST_PORT}"
+            echo "Build #${IMAGE_TAG} succeeded. Image pushed to Docker Hub as ${IMAGE_TAG} and latest."
+            echo "To deploy manually on EC2, run: docker pull sangambuild/todo-app:latest && docker stop todo-container && docker rm todo-container && docker run -d --name todo-container --network todo-network -p 3001:3000 --env-file .env sangambuild/todo-app:latest"
         }
 
         failure {
