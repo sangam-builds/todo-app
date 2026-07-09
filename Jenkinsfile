@@ -9,6 +9,9 @@ pipeline {
         CONTAINER_NAME = "todo-container"
         HOST_PORT = "3001"
         CONTAINER_PORT = "3000"
+
+        EC2_HOST = "ubuntu@13.60.95.90"
+        DOCKER_NETWORK = "todo-network"
     }
 
     stages {
@@ -80,15 +83,11 @@ pipeline {
 
         stage('Deploy Container') {
             steps {
-                bat """
-                docker stop %CONTAINER_NAME% 2>nul
-                docker rm %CONTAINER_NAME% 2>nul
-
-                docker run -d ^
-                --name %CONTAINER_NAME% ^
-                -p %HOST_PORT%:%CONTAINER_PORT% ^
-                %DOCKERHUB_USER%/%IMAGE_NAME%:latest
-                """
+                sshagent(credentials: ['ec2-ssh-key']) {
+                    bat """
+                    ssh -o StrictHostKeyChecking=no %EC2_HOST% "docker pull %DOCKERHUB_USER%/%IMAGE_NAME%:latest && docker stop %CONTAINER_NAME% || true && docker rm %CONTAINER_NAME% || true && docker run -d --name %CONTAINER_NAME% --network %DOCKER_NETWORK% -p %HOST_PORT%:%CONTAINER_PORT% --env-file .env %DOCKERHUB_USER%/%IMAGE_NAME%:latest"
+                    """
+                }
             }
         }
     }
