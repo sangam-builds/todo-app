@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,20 +14,20 @@ model User {
   picture      String?
   accessToken  String?
   refreshToken String?
-  todos        Todo[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  todos        Todo[]
 }
 
 model Todo {
-  id              Int      @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   title           String
-  completed       Boolean  @default(false)
+  completed       Boolean   @default(false)
   calendarEventId String?
-  createdAt       DateTime @default(now())
+  createdAt       DateTime  @default(now())
   completedAt     DateTime?
-  deleted         Boolean  @default(false)
+  deleted         Boolean   @default(false)
   deletedAt       DateTime?
   userId          String?
-  user            User?    @relation(fields: [userId], references: [id])
+  user            User?     @relation(fields: [userId], references: [id])
 }
