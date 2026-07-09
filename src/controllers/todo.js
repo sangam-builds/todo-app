@@ -8,7 +8,7 @@ export const getTodos = async (req, res) => {
   try {
     const userId = req.user ? req.user.id : null;
     const todos = await prisma.todo.findMany({
-      where: { userId },
+      where: { userId, deleted: false },
       orderBy: {
         createdAt: 'desc'
       }
@@ -36,6 +36,7 @@ export const createTodo = async (req, res) => {
         userId
       }
     });
+
 
     // If user is authenticated, query their OAuth tokens and create calendar event
     if (userId) {
@@ -120,7 +121,10 @@ export const updateTodo = async (req, res) => {
 
     const data = {};
     if (title !== undefined) data.title = title.trim();
-    if (completed !== undefined) data.completed = completed;
+    if (completed !== undefined) {
+      data.completed = completed;
+      data.completedAt = completed ? new Date() : null;
+    }
 
     const updatedTodo = await prisma.todo.update({
       where: { id },
@@ -205,11 +209,30 @@ export const deleteTodo = async (req, res) => {
       return res.status(403).json({ error: 'Access denied: You do not own this task.' });
     }
 
-    const deletedTodo = await prisma.todo.delete({
-      where: { id }
+    const deletedTodo = await prisma.todo.update({
+      where: { id },
+      data: {
+        deleted: true,
+        deletedAt: new Date()
+      }
     });
 
     res.status(200).json(deletedTodo);
+  } catch (error) {
+    res.status(500).json({ error: error.message || 'Server Error' });
+  }
+};
+
+export const getTodoHistory = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    // Get all user's todos (including soft-deleted and completed) directly from DB
+    const history = await prisma.todo.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' }
+    });
+    
+    res.status(200).json(history);
   } catch (error) {
     res.status(500).json({ error: error.message || 'Server Error' });
   }

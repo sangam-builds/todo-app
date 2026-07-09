@@ -44,6 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModalBtn = document.getElementById('close-modal');
     const googleSignupBtn = document.getElementById('google-signup-btn');
 
+    // History Elements
+    const historyBtn = document.getElementById('history-btn');
+    const historyModal = document.getElementById('history-modal');
+    const closeHistoryModalBtn = document.getElementById('close-history-modal');
+    const historyList = document.getElementById('history-list');
+    const historyEmptyState = document.getElementById('history-empty-state');
+
     let isAuthenticated = false;
 
     function openSignupModal() {
@@ -61,14 +68,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    googleSignupBtn.addEventListener('click', () => {
-        window.location.href = '/api/auth/google';
+    function openHistoryModal() {
+        historyModal.classList.remove('hidden');
+        fetchHistory();
+    }
+
+    function closeHistoryModal() {
+        historyModal.classList.add('hidden');
+    }
+
+    historyBtn.addEventListener('click', openHistoryModal);
+    closeHistoryModalBtn.addEventListener('click', closeHistoryModal);
+    historyModal.addEventListener('click', (e) => {
+        if (e.target === historyModal) {
+            closeHistoryModal();
+        }
     });
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !signupModal.classList.contains('hidden')) {
-            closeSignupModal();
+        if (e.key === 'Escape') {
+            if (!signupModal.classList.contains('hidden')) {
+                closeSignupModal();
+            }
+            if (!historyModal.classList.contains('hidden')) {
+                closeHistoryModal();
+            }
         }
+    });
+
+    googleSignupBtn.addEventListener('click', () => {
+        window.location.href = '/api/auth/google';
     });
 
     // Redirect to Google login flow
@@ -314,6 +343,93 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Fetch history from API
+    async function fetchHistory() {
+        try {
+            historyList.innerHTML = '<li style="text-align: center; padding: 20px; color: var(--text-secondary);"><i class="fa-solid fa-spinner fa-spin"></i> Loading history...</li>';
+            historyEmptyState.classList.add('hidden');
+            
+            const response = await fetch('/api/todos/history');
+            if (!response.ok) throw new Error('Failed to load history');
+            
+            const historyItems = await response.json();
+            renderHistory(historyItems);
+        } catch (error) {
+            console.error(error);
+            showToast('Error loading history from server', 'error');
+            historyList.innerHTML = '';
+            historyEmptyState.classList.remove('hidden');
+        }
+    }
+
+    // Render history items
+    function renderHistory(items) {
+        historyList.innerHTML = '';
+        
+        if (!items || items.length === 0) {
+            historyEmptyState.classList.remove('hidden');
+            return;
+        }
+        
+        historyEmptyState.classList.add('hidden');
+        
+        items.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'history-item';
+            
+            let statusLabel = 'Pending';
+            let statusClass = 'status-pending';
+            
+            if (item.deleted) {
+                statusLabel = 'Deleted';
+                statusClass = 'status-deleted';
+            } else if (item.completed) {
+                statusLabel = 'Completed';
+                statusClass = 'status-completed';
+            }
+            
+            li.innerHTML = `
+                <div class="history-item-top">
+                    <span class="history-title">${escapeHTML(item.title)}</span>
+                    <span class="history-status ${statusClass}">${statusLabel}</span>
+                </div>
+                <div class="history-dates">
+                    <div class="history-date-item">
+                        <i class="fa-regular fa-calendar-plus"></i>
+                        <span class="history-date-label">Created:</span>
+                        <span class="history-date-val">${formatDateTime(item.createdAt)}</span>
+                    </div>
+                    ${item.completed ? `
+                    <div class="history-date-item">
+                        <i class="fa-regular fa-calendar-check"></i>
+                        <span class="history-date-label">Completed:</span>
+                        <span class="history-date-val">${formatDateTime(item.completedAt)}</span>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+            historyList.appendChild(li);
+        });
+    }
+
+    // Format timestamps to local readable text
+    function formatDateTime(dateStr) {
+        if (!dateStr) return '—';
+        try {
+            const date = new Date(dateStr);
+            return new Intl.DateTimeFormat('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }).format(date);
+        } catch (e) {
+            return dateStr;
+        }
+    }
+
     // Initial load
     async function init() {
         await checkSession();
@@ -321,3 +437,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     init();
 });
+

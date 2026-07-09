@@ -28,6 +28,9 @@ model Todo {
   completed       Boolean  @default(false)
   calendarEventId String?
   createdAt       DateTime @default(now())
+  completedAt     DateTime?
+  deleted         Boolean  @default(false)
+  deletedAt       DateTime?
   userId          String?
   user            User?    @relation(fields: [userId], references: [id])
 }

@@ -26,6 +26,9 @@
                 <div id="user-profile" class="user-profile hidden">
                     <img id="user-avatar" src="" alt="User Avatar" class="user-avatar">
                     <span id="user-name" class="user-name"></span>
+                    <button id="history-btn" class="history-btn" aria-label="View History" title="View History">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </button>
                     <button id="logout-btn" class="logout-btn" aria-label="Sign Out" title="Sign Out">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
@@ -96,6 +99,27 @@
                 <i class="fa-brands fa-google"></i>
                 <span>Continue with Google</span>
             </button>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="history-modal" class="modal-overlay hidden">
+        <div class="modal-content history-modal-content">
+            <button id="close-history-modal" class="close-modal-btn" aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="history-header">
+                <h2><i class="fa-solid fa-clock-rotate-left"></i> Task History</h2>
+            </div>
+            <div class="history-body">
+                <ul id="history-list" class="history-list">
+                    <!-- History items injected here -->
+                </ul>
+                <div id="history-empty-state" class="history-empty-state hidden">
+                    <div class="history-empty-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                    <p>No task history found.</p>
+                </div>
+            </div>
         </div>
     </div>
 
