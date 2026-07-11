@@ -1,14 +1,23 @@
-FROM node:20-alpine
-
+# Stage 1: Build & Generate Prisma Client
+FROM node:20-alpine AS builder
 WORKDIR /app
-
 COPY package*.json ./
-
 RUN npm ci
-
 COPY prisma ./prisma
 RUN npx prisma generate
 
+# Stage 2: Production Runtime
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+# Copy generated Prisma Client and binaries from builder
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/client
+
+# Copy application source code
+COPY prisma ./prisma
 COPY . .
 
 EXPOSE 3000

@@ -1,0 +1,938 @@
+/* ==========================================================================
+   CINEMATIC PREMIUM GLASSMORPHIC SAAS NAVBAR STYLES
+   ========================================================================== */
+
+:root {
+    /* Navbar Design System Variables - Dark Mode (Default) */
+    --nav-hero-height: 90px;
+    --nav-scrolled-height: 68px;
+    --nav-transition: all 650ms cubic-bezier(0.16, 1, 0.3, 1);
+    
+    --nav-glass-bg: rgba(255, 255, 255, 0.02);
+    --nav-glass-bg-scrolled: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    --nav-glass-border: rgba(255, 255, 255, 0.06);
+    --nav-glass-border-scrolled: rgba(255, 255, 255, 0.16);
+    
+    /* Layered Soft Shadows & Ambient Purple/Indigo Glows */
+    --nav-shadow-scrolled: 
+        0 20px 50px rgba(0, 0, 0, 0.35), 
+        0 10px 30px rgba(99, 102, 241, 0.12),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2), /* Inner highlight */
+        inset 0 -1px 20px rgba(255, 255, 255, 0.03); /* Ambient reflection */
+        
+    --nav-text-color: var(--text-slate);
+    --nav-text-hover: var(--text-white);
+    
+    /* Active Sliding Pill Track Styling */
+    --nav-pill-bg: rgba(255, 255, 255, 0.07);
+    --nav-pill-border: rgba(99, 102, 241, 0.5);
+    --nav-pill-glow: 0 0 18px rgba(99, 102, 241, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Light Theme Variables */
+[data-theme="light"] {
+    --nav-glass-bg: rgba(255, 255, 255, 0.2);
+    --nav-glass-bg-scrolled: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.45) 100%);
+    --nav-glass-border: rgba(0, 0, 0, 0.05);
+    --nav-glass-border-scrolled: rgba(255, 255, 255, 0.4);
+    
+    --nav-shadow-scrolled: 
+        0 20px 45px rgba(0, 0, 0, 0.07), 
+        0 10px 20px rgba(99, 102, 241, 0.04),
+        inset 0 1px 2px rgba(255, 255, 255, 0.85);
+        
+    --nav-text-color: #4B5563; /* Gray-600 */
+    --nav-text-hover: #111827; /* Gray-900 */
+    
+    --nav-pill-bg: rgba(99, 102, 241, 0.06);
+    --nav-pill-border: rgba(99, 102, 241, 0.55);
+    --nav-pill-glow: 0 0 12px rgba(99, 102, 241, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+/* Dynamic Scroll target Margin to prevent header overlay cutoff */
+section[id], header[id] {
+    scroll-margin-top: 110px !important;
+}
+
+/* Ambient Drifting Glows Behind Navbar */
+.navbar-ambient-glows {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 140px;
+    pointer-events: none;
+    z-index: 998; /* Just below navbar */
+    overflow: hidden;
+    opacity: 0.75;
+    transition: opacity 0.5s ease;
+}
+
+.navbar.scrolled ~ .navbar-ambient-glows {
+    opacity: 0.4; /* Soften on scroll */
+}
+
+.navbar-glow-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(65px);
+    opacity: 0.25;
+    mix-blend-mode: screen;
+    will-change: transform;
+}
+
+[data-theme="light"] .navbar-glow-blob {
+    mix-blend-mode: multiply;
+    opacity: 0.08;
+    filter: blur(80px);
+}
+
+.navbar-glow-purple {
+    top: -35px;
+    left: 30%;
+    width: 240px;
+    height: 130px;
+    background: radial-gradient(circle, #6366F1 0%, transparent 80%);
+    animation: navGlowFloat1 10s ease-in-out infinite alternate;
+}
+
+.navbar-glow-blue {
+    top: -45px;
+    left: 48%;
+    width: 280px;
+    height: 140px;
+    background: radial-gradient(circle, #06B6D4 0%, transparent 80%);
+    animation: navGlowFloat2 12s ease-in-out infinite alternate;
+}
+
+.navbar-glow-pink {
+    top: -30px;
+    left: 62%;
+    width: 200px;
+    height: 120px;
+    background: radial-gradient(circle, #EC4899 0%, transparent 80%);
+    animation: navGlowFloat3 14s ease-in-out infinite alternate;
+}
+
+@keyframes navGlowFloat1 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-30px, 15px) scale(1.1); }
+}
+
+@keyframes navGlowFloat2 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(25px, -15px) scale(0.9); }
+}
+
+@keyframes navGlowFloat3 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-15px, 20px) scale(1.05); }
+}
+
+/* ==========================================================================
+   NAVBAR BASE & STATE TRANSITIONS
+   ========================================================================== */
+.navbar {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    
+    /* Hero State Defaults */
+    top: 0;
+    width: 94%;
+    max-width: 1440px;
+    height: var(--nav-hero-height);
+    background: transparent;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid transparent;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0 2rem;
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    /* Hardware accelerated transitions */
+    will-change: top, width, height, border-radius, background-color, border-color, box-shadow, backdrop-filter, padding, transform;
+    transition: 
+        top var(--nav-transition),
+        width var(--nav-transition),
+        height var(--nav-transition),
+        border-radius var(--nav-transition),
+        background-color var(--nav-transition),
+        border-color var(--nav-transition),
+        box-shadow var(--nav-transition),
+        backdrop-filter var(--nav-transition),
+        padding var(--nav-transition),
+        transform var(--nav-transition);
+}
+
+/* Scrolled State (Floating Capsule) */
+.navbar.scrolled {
+    top: 20px;
+    width: 85%;
+    max-width: 1200px;
+    height: var(--nav-scrolled-height);
+    background: var(--nav-glass-bg-scrolled);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid var(--nav-glass-border-scrolled);
+    border-radius: 999px;
+    box-shadow: var(--nav-shadow-scrolled);
+    padding: 0 2.5rem;
+}
+
+/* Scroll Speed-Sensitive Hide Class */
+.navbar.navbar-hidden {
+    transform: translate(-50%, -120px) scale(0.95);
+}
+
+.nav-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+/* ==========================================================================
+   LOGO STYLING
+   ========================================================================== */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--text-white);
+    font-family: var(--font-jakarta);
+    font-weight: 800;
+    font-size: 1.45rem;
+    letter-spacing: -0.03em;
+    user-select: none;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+[data-theme="light"] .logo {
+    color: #111827;
+}
+
+.logo-icon-wrapper {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.logo:hover {
+    transform: scale(1.03);
+}
+
+.logo:hover .logo-icon-wrapper {
+    transform: rotate(12deg) scale(1.08);
+}
+
+/* Scrolled capsule scales logo down slightly */
+.navbar.scrolled .logo-icon-wrapper {
+    transform: scale(0.92);
+}
+.navbar.scrolled .logo:hover .logo-icon-wrapper {
+    transform: rotate(12deg) scale(1);
+}
+
+/* Gradient Flow Text & Purple Glow */
+.logo-text span {
+    background: linear-gradient(135deg, #6366F1 0%, #a855f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+}
+
+.logo-text span::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background: rgba(99, 102, 241, 0.3);
+    filter: blur(12px);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.logo:hover .logo-text span::after {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   NAVIGATION LINKS, GLASS SHIMMERS & ACTIVE PILL
+   ========================================================================== */
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+/* Hide mobile actions on desktop view */
+.nav-actions-mobile {
+    display: none !important;
+}
+
+.nav-links li {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--nav-text-color);
+    font-family: var(--font-jakarta);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.55rem 1.3rem;
+    border-radius: 999px;
+    background: transparent;
+    display: inline-block;
+    position: relative;
+    z-index: 2; /* Text stands above sliding pill (z-index: 1) */
+    overflow: hidden;
+    will-change: color, transform;
+    transition: 
+        color 0.3s ease,
+        transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Underline growing from center on hover */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #6366F1, #8B5CF6);
+    transform: translateX(-50%);
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+/* Moving Glass Shimmer Hover effect */
+.nav-links a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+    transition: none;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 999px;
+}
+
+[data-theme="light"] .nav-links a::before {
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.08), transparent);
+}
+
+.nav-links a:hover {
+    color: var(--nav-text-hover);
+    transform: translateY(-2px);
+}
+
+.nav-links a:hover::after {
+    width: 40%;
+}
+
+.nav-links a:hover::before {
+    left: 100%;
+    transition: left 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* The Sliding Capsule Pill Background (Absolute, coordinates updated via JS) */
+.nav-active-pill {
+    position: absolute;
+    background: var(--nav-pill-bg);
+    border: 1px solid var(--nav-pill-border);
+    box-shadow: var(--nav-pill-glow);
+    border-radius: 999px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transform: scale(0.9);
+    filter: blur(5px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    will-change: left, width, height, opacity, transform, filter;
+    transition: 
+        left 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+        width 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+        height 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+        opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+        transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+        filter 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.nav-active-pill.visible {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+}
+
+.nav-links a.active {
+    color: var(--text-white) !important;
+}
+[data-theme="light"] .nav-links a.active {
+    color: #4F46E5 !important;
+}
+
+/* ==========================================================================
+   TACTILE/MAGNETIC BUTTONS (LOGIN & GET STARTED)
+   ========================================================================== */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+/* Ghost style login button */
+.login-link {
+    text-decoration: none;
+    color: var(--nav-text-color);
+    font-family: var(--font-jakarta);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.6rem 1.25rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.login-link:hover {
+    color: var(--nav-text-hover);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme="light"] .login-link:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Magnetic Get Started Button */
+.btn-get-started {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.6rem;
+    font-family: var(--font-jakarta);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-white) !important;
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    will-change: transform, box-shadow;
+    /* Soft magnetic snapping return */
+    transition: 
+        transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+        box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-get-started i {
+    font-size: 0.85rem;
+    will-change: transform;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Get Started Hover Lift & Glow */
+.btn-get-started:hover {
+    box-shadow: 
+        0 8px 25px rgba(99, 102, 241, 0.45), 
+        0 0 10px rgba(139, 92, 246, 0.35);
+}
+
+/* Press Animation */
+.btn-get-started:active {
+    transform: scale(0.95) !important;
+}
+
+/* ==========================================================================
+   PREMIUM SLIDING TRACK-BASED THEME SWITCH
+   ========================================================================== */
+.theme-toggle-switch {
+    width: 62px;
+    height: 32px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--nav-glass-border);
+    cursor: pointer;
+    position: relative;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    transition: 
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+    user-select: none;
+}
+
+.theme-toggle-switch:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.12);
+}
+
+.switch-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding: 0 7px;
+}
+
+.switch-track i {
+    font-size: 0.85rem;
+    color: var(--nav-text-color);
+    z-index: 2; /* Text sits above sliding thumb */
+    transition: color 0.4s ease;
+    pointer-events: none;
+}
+
+/* Glassmorphic Sliding Thumb */
+.switch-thumb {
+    position: absolute;
+    top: 50%;
+    left: 3px;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 1;
+    will-change: left, transform, background-color, border-color, box-shadow;
+    transition: 
+        left 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+        background-color 0.4s ease,
+        border-color 0.4s ease,
+        box-shadow 0.4s ease,
+        transform 0.4s ease;
+}
+
+/* Active Moon Icon styling in dark mode */
+.switch-track .icon-moon {
+    color: var(--text-white);
+}
+
+/* Light Theme Switch States */
+[data-theme="light"] .theme-toggle-switch {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+[data-theme="light"] .theme-toggle-switch:hover {
+    background: rgba(0, 0, 0, 0.07);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+[data-theme="light"] .switch-thumb {
+    left: calc(100% - 27px); /* Move thumb to the right (Sun) */
+    background: #F59E0B;
+    border-color: #D97706;
+    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.45);
+    transform: translateY(-50%) rotate(180deg);
+}
+[data-theme="light"] .switch-track .icon-sun {
+    color: #ffffff; /* Golden glow text inside thumb */
+}
+[data-theme="light"] .switch-track .icon-moon {
+    color: #9CA3AF;
+}
+
+/* ==========================================================================
+   MOBILE TOGGLE & OVERLAY
+   ========================================================================== */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 17px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1005;
+}
+
+.hamburger-line {
+    width: 100%;
+    height: 2px;
+    background-color: var(--text-white);
+    border-radius: 99px;
+    will-change: transform, opacity, background-color;
+    transition: 
+        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+        opacity 0.3s ease, 
+        background-color 0.4s ease;
+}
+
+[data-theme="light"] .hamburger-line {
+    background-color: #111827;
+}
+
+/* Hamburger animations to X */
+.nav-toggle.open .line-1 {
+    transform: translateY(7.5px) rotate(45deg);
+}
+.nav-toggle.open .line-2 {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.nav-toggle.open .line-3 {
+    transform: translateY(-7.5px) rotate(-45deg);
+}
+
+/* Mobile Drawer Overlay backdrop */
+.nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(1, 3, 10, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+    will-change: opacity;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ==========================================================================
+   RESPONSIVE LAYOUTS
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .nav-toggle {
+        display: flex;
+    }
+    
+    .nav-actions {
+        display: none;
+    }
+    
+    .navbar {
+        height: 72px;
+        padding: 0 1.5rem;
+    }
+    
+    .navbar.scrolled {
+        top: 12px;
+        width: 90%;
+        height: 60px;
+        padding: 0 1.5rem;
+    }
+    
+    /* Sliding Glass Side Drawer Menu */
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 100vh;
+        background: rgba(10, 10, 15, 0.7);
+        backdrop-filter: blur(35px);
+        -webkit-backdrop-filter: blur(35px);
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 6.5rem 2rem 2rem 2rem;
+        
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 1.25rem;
+        
+        z-index: 1000;
+        transform: translateX(100%);
+        will-change: transform;
+        transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: -10px 0 40px rgba(0, 0, 0, 0.4);
+    }
+    
+    [data-theme="light"] .nav-links {
+        background: rgba(255, 255, 255, 0.75);
+        border-left: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: -10px 0 40px rgba(0, 0, 0, 0.08);
+    }
+    
+    .nav-links.open {
+        transform: translateX(0);
+    }
+    
+    /* Hide sliding pill background on mobile list */
+    .nav-active-pill {
+        display: none;
+    }
+    
+    .nav-links li {
+        width: 100%;
+    }
+    
+    .nav-links a {
+        font-size: 1.1rem;
+        padding: 0.6rem 1rem;
+        width: 100%;
+        display: block;
+        border-radius: 12px;
+        border: 1px solid transparent;
+        transform: translateX(30px);
+        opacity: 0;
+        will-change: transform, opacity;
+        transition: 
+            transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+            opacity 0.4s ease,
+            color 0.2s ease;
+    }
+    
+    /* Mobile Active State Capsule styles */
+    .nav-links a.active {
+        color: var(--text-white) !important;
+        background: var(--nav-pill-bg) !important;
+        border-color: var(--nav-pill-border) !important;
+        box-shadow: var(--nav-pill-glow);
+    }
+    
+    [data-theme="light"] .nav-links a.active {
+        color: #4F46E5 !important;
+        background: rgba(99, 102, 241, 0.08) !important;
+    }
+    
+    .nav-links a::after, .nav-links a::before {
+        display: none; /* Deactivate desktop hovers on mobile */
+    }
+    
+    /* Staggered slide and fade-in of links when open */
+    .nav-links.open a {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    
+    .nav-links.open li:nth-child(1) a { transition-delay: 100ms; }
+    .nav-links.open li:nth-child(2) a { transition-delay: 150ms; }
+    .nav-links.open li:nth-child(3) a { transition-delay: 200ms; }
+    .nav-links.open li:nth-child(4) a { transition-delay: 250ms; }
+    .nav-links.open li:nth-child(5) a { transition-delay: 300ms; }
+    
+    /* Mobile Actions Area */
+    .nav-actions-mobile {
+        display: flex !important;
+        flex-direction: column;
+        width: 100%;
+        gap: 1.25rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        transform: translateY(30px);
+        opacity: 0;
+        will-change: transform, opacity;
+        transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) 350ms, opacity 0.4s ease 350ms;
+    }
+    
+    [data-theme="light"] .nav-actions-mobile {
+        border-top-color: rgba(0, 0, 0, 0.08);
+    }
+    
+    .nav-links.open .nav-actions-mobile {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    .nav-actions-mobile .mobile-theme-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+    
+    .nav-actions-mobile .mobile-theme-label {
+        font-family: var(--font-jakarta);
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--nav-text-color);
+    }
+    
+    .nav-actions-mobile .login-link {
+        font-size: 1.1rem;
+        text-align: center;
+        width: 100%;
+        border: 1px solid var(--nav-glass-border);
+        background: var(--nav-glass-bg);
+        padding: 0.75rem;
+    }
+    
+    .nav-actions-mobile .btn-get-started {
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1.05rem;
+    }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY & REDUCED MOTION SUPPORT
+   ========================================================================== */
+.navbar a:focus-visible, 
+.theme-toggle-switch:focus-visible, 
+.nav-toggle:focus-visible {
+    outline: 2px solid #8B5CF6;
+    outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar,
+    .nav-links a,
+    .btn-get-started,
+    .btn-get-started i,
+    .theme-toggle-switch,
+    .switch-thumb,
+    .logo,
+    .logo-icon-wrapper,
+    .navbar-glow-blob,
+    .hamburger-line,
+    .nav-overlay,
+    .nav-links,
+    .nav-active-pill,
+    .nav-actions-mobile {
+        transition: none !important;
+        animation: none !important;
+    }
+    
+    .navbar-glow-blob {
+        display: none;
+    }
+    
+    .navbar-hidden {
+        transform: translate(-50%, -120px) !important;
+    }
+}
+
+/* ==========================================================================
+   SKEUOMORPHIC PULL-CORD LAMP SWITCH
+   ========================================================================== */
+.lamp-theme-pull {
+    position: fixed;
+    top: -10px; /* Anchored to very top of viewport */
+    right: 4.5%; /* Positioned separately from the centered floating navbar */
+    z-index: 1005; /* Hangs above all elements */
+    cursor: pointer;
+    width: 40px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    pointer-events: auto;
+    
+    /* Hardware accelerated snapping transitions */
+    will-change: transform;
+    transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pull-wire-svg {
+    overflow: visible;
+}
+
+.pull-path {
+    stroke: rgba(255, 255, 255, 0.3);
+    stroke-width: 2.2;
+    fill: none;
+    stroke-linecap: round;
+    transition: stroke 0.3s ease;
+}
+
+.pull-bulb {
+    fill: #6366F1; /* Purple light default (Dark mode) */
+    stroke: rgba(255, 255, 255, 0.2);
+    stroke-width: 1.5;
+    transition: fill 0.4s ease, filter 0.4s ease;
+    filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.6));
+}
+
+/* Light Mode Swapped Styling */
+[data-theme="light"] .pull-path {
+    stroke: rgba(0, 0, 0, 0.2);
+}
+[data-theme="light"] .pull-bulb {
+    fill: #F59E0B; /* Golden yellow sun */
+    filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.7));
+    stroke: rgba(0, 0, 0, 0.08);
+}
+
+/* Hover Micro-Movements and swing cord */
+.lamp-theme-pull:hover {
+    transform: translateY(3px);
+}
+.lamp-theme-pull:hover .pull-path {
+    stroke: rgba(255, 255, 255, 0.6);
+}
+[data-theme="light"] .lamp-theme-pull:hover .pull-path {
+    stroke: rgba(0, 0, 0, 0.45);
+}
+
+.lamp-theme-pull:hover .pull-wire-svg {
+    animation: cordSwing 1.6s ease-in-out infinite alternate;
+    transform-origin: top center;
+}
+
+@keyframes cordSwing {
+    0% { transform: rotate(-3.5deg); }
+    100% { transform: rotate(3.5deg); }
+}
+
+/* Clicking / Pulling down trigger state */
+.lamp-theme-pull.pulling {
+    transform: translateY(30px); /* Wire pulls down 30px */
+    transition: transform 0.1s ease;
+}
+
+/* Hide on mobile viewports to prevent hamburger clashing */
+@media (max-width: 768px) {
+    .lamp-theme-pull {
+        display: none !important;
+    }
+}
+

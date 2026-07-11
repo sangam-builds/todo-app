@@ -3,128 +3,987 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskFlow // Premium Todo Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>TaskFlow // Organize Everything. Achieve More Every Day.</title>
+    
+    <!-- Meta Descriptions (SEO Best Practices) -->
+    <meta name="description" content="TaskFlow is a premium, futuristic SaaS todo application that keeps you organized, synchronizes automatically with Google Calendar, and helps you achieve more every single day.">
+    <meta name="keywords" content="todo app, productivity tracker, task manager, google calendar sync, kanban board, time management, startup calendar, awwwards landing page">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css?v=3.0">
+    <link rel="stylesheet" href="css/features.css?v=3.0">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Theme loading script (placed in head to avoid theme flash) -->
+    <script src="js/theme.js?v=2.0"></script>
+    
+    <!-- FontAwesome & Font CDN (Outfit, Inter, Geist, Jakarta Sans loaded inside style.css) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <div class="background-decor">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
+
+    <!-- 0. Loading preloader screen -->
+    <div id="preloader" class="loader-overlay">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Initializing TaskFlow</div>
+    </div>
+
+    <!-- Scroll Progress Indicator Bar -->
+    <div class="scroll-progress-container">
+        <div class="scroll-progress-bar"></div>
+    </div>
+
+    <!-- 1. Sticky Glass Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#hero" class="logo">
+                <div class="logo-icon-wrapper">
+                    <!-- Premium Inline SVG Logo -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="34" height="34" fill="none" class="taskflow-logo-svg">
+                      <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#6366F1" />
+                          <stop offset="100%" stop-color="#8B5CF6" />
+                        </linearGradient>
+                        <linearGradient id="glossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3" />
+                          <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <rect class="logo-box" width="32" height="32" rx="9" fill="url(#logoGrad)" />
+                      <path d="M0 9C0 4.02944 4.02944 0 9 0H23C27.9706 0 32 4.02944 32 9V16C32 16 24 18 16 16C8 14 0 16 0 16V9Z" fill="url(#glossGrad)" opacity="0.5" />
+                      <path class="logo-checkmark" d="M9.5 16.5L13.5 20.5L22.5 11.5" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <div class="logo-text">Task<span>Flow</span></div>
+            </a>
+            
+            <!-- Custom Accessible Hamburger Menu Toggle -->
+            <button class="nav-toggle" aria-label="Toggle Navigation Menu" aria-expanded="false">
+                <span class="hamburger-line line-1"></span>
+                <span class="hamburger-line line-2"></span>
+                <span class="hamburger-line line-3"></span>
+            </button>
+            
+            <ul class="nav-links" id="nav-links">
+                <!-- Sliding active capsule background pill -->
+                <span class="nav-active-pill"></span>
+                
+                <li><a href="#features">Features</a></li>
+                <li><a href="#preview">Preview</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#reviews">Reviews</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                
+                <!-- Mobile Actions (Hidden on Desktop) -->
+                <div class="nav-actions-mobile">
+                    <div class="mobile-theme-row">
+                        <span class="mobile-theme-label">Switch Theme</span>
+                        <button class="theme-toggle-switch" id="theme-toggle-mobile" aria-label="Toggle theme" role="switch" aria-checked="false">
+                            <span class="switch-track">
+                                <i class="fa-solid fa-sun icon-sun"></i>
+                                <i class="fa-solid fa-moon icon-moon"></i>
+                                <span class="switch-thumb"></span>
+                            </span>
+                        </button>
+                    </div>
+                    <a href="/app" class="login-link">Login</a>
+                    <a href="/app" class="btn-get-started">Get Started <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </ul>
+            
+            <!-- Desktop Actions (Hidden on Mobile) -->
+            <div class="nav-actions">
+                <a href="/app" class="login-link">Login</a>
+                <a href="/app" class="btn-get-started">Get Started <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Ambient Drifting Glows Behind Navbar -->
+    <div class="navbar-ambient-glows">
+        <div class="navbar-glow-blob navbar-glow-purple"></div>
+        <div class="navbar-glow-blob navbar-glow-blue"></div>
+        <div class="navbar-glow-blob navbar-glow-pink"></div>
     </div>
     
-    <div class="app-container">
-        <header class="app-header">
-            <div class="header-actions">
-                <button id="google-sync" class="google-sync-btn" aria-label="Sync with Google">
-                    <i class="fa-brands fa-google"></i>
-                    <span>Sync with Google</span>
-                </button>
-                <div id="user-profile" class="user-profile hidden">
-                    <img id="user-avatar" src="" alt="User Avatar" class="user-avatar">
-                    <span id="user-name" class="user-name"></span>
-                    <button id="history-btn" class="history-btn" aria-label="View History" title="View History">
-                        <i class="fa-solid fa-clock-rotate-left"></i>
-                    </button>
-                    <button id="logout-btn" class="logout-btn" aria-label="Sign Out" title="Sign Out">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
-                </div>
-                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
-                    <i class="fa-solid fa-moon"></i>
-                </button>
+    <!-- Mobile Navigation Overlay Backdrop -->
+    <div class="nav-overlay" id="nav-overlay"></div>
+
+    <!-- Skeuomorphic Pull-Cord Lamp Switch for Theme Toggling -->
+    <div class="lamp-theme-pull" id="theme-toggle" aria-label="Pull to switch theme" role="button">
+        <svg class="pull-wire-svg" viewBox="0 0 40 180" width="40" height="180">
+            <defs>
+                <radialGradient id="bulbGlow" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"/>
+                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                </radialGradient>
+            </defs>
+            <!-- Curved hanging wire -->
+            <path class="pull-path" d="M 20 0 Q 12 45, 26 90 T 20 145" />
+            <!-- Connector ring -->
+            <rect x="18" y="142" width="4" height="6" rx="1" fill="#94A3B8" />
+            <!-- Pull bead/bulb -->
+            <circle class="pull-bulb" cx="20" cy="156" r="10" />
+            <!-- Glass shine reflection -->
+            <circle cx="17" cy="153" r="3" fill="url(#bulbGlow)" pointer-events="none" />
+        </svg>
+    </div>
+
+
+    <!-- Main Page Content -->
+    <main>
+
+        <!-- 2. Hero Section with Interactive Mockup & Particle Glows -->
+        <header id="hero" class="hero">
+            <div class="hero-shapes">
+                <!-- Drift blobs created by JS app.js -->
             </div>
-            <div class="header-main">
-                <h1>TaskFlow</h1>
-                <span class="badge">v1.0</span>
-            </div>
-            <p class="subtitle">Organize your thoughts, elevate your productivity.</p>
             
-            <div class="stats-container">
-                <div class="stat-card">
-                    <span class="stat-val" id="total-count">0</span>
-                    <span class="stat-lbl">Total Tasks</span>
+            <div class="container hero-grid">
+                <div class="hero-content reveal-el reveal-slide-up">
+                    <span class="section-tag">Introducing TaskFlow 2.0</span>
+                    <h1 class="hero-headline gradient-text">
+                        Organize Everything.
+                        <span>Achieve More Every Day.</span>
+                    </h1>
+                    <p class="hero-paragraph">
+                        Elevate your productivity with a futuristic todo dashboard that connects your thoughts, projects, and calendar into one fluid workspace.
+                    </p>
+                    <div class="hero-ctas">
+                        <a href="/app" class="btn btn-primary">Get Started Free <i class="fa-solid fa-arrow-right"></i></a>
+                        <a href="#preview" class="btn btn-secondary"><i class="fa-solid fa-circle-play"></i> Watch Demo</a>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <span class="stat-val" id="completed-count">0</span>
-                    <span class="stat-lbl">Completed</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-val" id="pending-count">0</span>
-                    <span class="stat-lbl">Pending</span>
+                
+                <div class="hero-mockup-wrapper reveal-el reveal-scale">
+                    <!-- 3D Interactive Floating Dashboard Mockup -->
+                    <div class="hero-dashboard-mockup">
+                        <div class="mockup-header">
+                            <div class="mockup-controls">
+                                <span class="mockup-dot red"></span>
+                                <span class="mockup-dot yellow"></span>
+                                <span class="mockup-dot green"></span>
+                            </div>
+                            <div class="mockup-title">TASKFLOW DASHBOARD</div>
+                            <div><i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); font-size: 0.75rem;"></i></div>
+                        </div>
+                        
+                        <div class="mockup-body">
+                            <!-- Dashboard tasks (left side of mockup) -->
+                            <div class="mockup-left">
+                                <h4 style="font-family: var(--font-jakarta); font-size: 0.85rem; margin-bottom: 0.5rem;">Today's Tasks</h4>
+                                
+                                <div class="mockup-card task-item completed">
+                                    <div class="task-checkbox"><i class="fa-solid fa-check"></i></div>
+                                    <span class="task-title">Review product roadmap</span>
+                                    <div class="task-meta">
+                                        <span class="priority-badge high">High</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mockup-card task-item">
+                                    <div class="task-checkbox"><i class="fa-solid fa-check"></i></div>
+                                    <span class="task-title">Draft Q3 marketing strategy</span>
+                                    <div class="task-meta">
+                                        <span class="priority-badge medium">Med</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mockup-card task-item">
+                                    <div class="task-checkbox"><i class="fa-solid fa-check"></i></div>
+                                    <span class="task-title">Sync with design team</span>
+                                    <div class="task-meta">
+                                        <span class="priority-badge medium">Med</span>
+                                    </div>
+                                </div>
+
+                                <div class="mockup-card task-item">
+                                    <div class="task-checkbox"><i class="fa-solid fa-check"></i></div>
+                                    <span class="task-title">Prepare investor presentation</span>
+                                    <div class="task-meta">
+                                        <span class="priority-badge high">High</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Dashboard side cards (right side of mockup) -->
+                            <div class="mockup-right">
+                                <h4 style="font-family: var(--font-jakarta); font-size: 0.85rem; margin-bottom: 0.5rem;">Schedule</h4>
+                                <div class="mockup-card" style="padding: 0.6rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fa-regular fa-clock" style="color: var(--primary);"></i>
+                                    <div>
+                                        <div style="font-size: 0.7rem; font-weight: 700;">Design Sync</div>
+                                        <div style="font-size: 0.6rem; color: var(--text-muted);">14:00 - 15:00</div>
+                                    </div>
+                                </div>
+                                <div class="mockup-card" style="padding: 0.6rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fa-regular fa-clock" style="color: var(--accent);"></i>
+                                    <div>
+                                        <div style="font-size: 0.7rem; font-weight: 700;">Marketing review</div>
+                                        <div style="font-size: 0.6rem; color: var(--text-muted);">16:30 - 17:00</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Floating Widget 1: Progress Ring -->
+                    <div class="floating-widget widget-progress float-w1">
+                        <div class="stat-circle-wrapper" style="width: 50px; height: 50px; margin-bottom: 0;">
+                            <svg class="progress-circle-svg" width="50" height="50" style="transform: rotate(-90deg);">
+                                <circle cx="25" cy="25" r="20" stroke="rgba(255,255,255,0.05)" stroke-width="4" fill="transparent"/>
+                                <circle cx="25" cy="25" r="20" stroke="url(#hero-ring-gradient)" stroke-width="4" fill="transparent" stroke-dasharray="125" stroke-dashoffset="35"/>
+                                <defs>
+                                    <linearGradient id="hero-ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="var(--primary)"/>
+                                        <stop offset="100%" stop-color="var(--accent)"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <span class="stat-circle-num" style="font-size: 0.75rem;">72%</span>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.75rem; font-weight: 700;">Completed</div>
+                            <div style="font-size: 0.6rem; color: var(--text-muted);">8/11 tasks today</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Floating Widget 2: Calendar Widget -->
+                    <div class="floating-widget widget-calendar float-w2">
+                        <div class="calendar-header">
+                            <span>July 2026</span>
+                            <i class="fa-solid fa-chevron-right" style="font-size: 0.6rem; color: var(--text-muted);"></i>
+                        </div>
+                        <div class="calendar-days">
+                            <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+                            <span class="calendar-day-num">8</span>
+                            <span class="calendar-day-num">9</span>
+                            <span class="calendar-day-num active">10</span>
+                            <span class="calendar-day-num">11</span>
+                            <span class="calendar-day-num">12</span>
+                            <span class="calendar-day-num">13</span>
+                            <span class="calendar-day-num">14</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Floating Widget 3: AI suggestions widget -->
+                    <div class="floating-widget widget-ai float-normal">
+                        <div class="ai-header">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>AI Assistant Suggestions</span>
+                        </div>
+                        <div class="ai-suggestion" id="typing-text">Optimizing morning schedule...</div>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <main class="app-content">
-            <form id="todo-form" class="todo-input-group">
-                <input type="text" id="todo-input" placeholder="What needs to be done?" required autocomplete="off">
-                <button type="submit" aria-label="Add Task">
-                    <i class="fa-solid fa-plus"></i> Add
-                </button>
-            </form>
-
-            <div class="filter-bar">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="pending">Pending</button>
-                <button class="filter-btn" data-filter="completed">Completed</button>
-            </div>
-
-            <div class="list-wrapper">
-                <ul id="todo-list" class="todo-list">
-                    <!-- Todos injected here -->
-                </ul>
-                <div id="empty-state" class="empty-state">
-                    <div class="empty-icon"><i class="fa-solid fa-clipboard-list"></i></div>
-                    <p>No tasks found. Create one to get started!</p>
+        <!-- 3. Trusted By Section (Infinite Logo Marquee) -->
+        <section class="trusted">
+            <div class="container">
+                <p class="reveal-el reveal-fade-in">Trusted by high-performance teams at</p>
+                <div class="marquee-wrapper">
+                    <div class="marquee-content">
+                        <div class="brand-logo"><i class="fa-brands fa-google"></i> Google</div>
+                        <div class="brand-logo"><i class="fa-brands fa-microsoft"></i> Microsoft</div>
+                        <div class="brand-logo"><i class="fa-brands fa-slack"></i> Slack</div>
+                        <div class="brand-logo"><i class="fa-brands fa-apple"></i> Apple</div>
+                        <div class="brand-logo"><i class="fa-brands fa-figma"></i> Figma</div>
+                        <div class="brand-logo"><i class="fa-brands fa-stripe"></i> Stripe</div>
+                        <div class="brand-logo"><i class="fa-brands fa-github"></i> GitHub</div>
+                    </div>
+                    <!-- Duplicate for infinite seamless scroll -->
+                    <div class="marquee-content" aria-hidden="true">
+                        <div class="brand-logo"><i class="fa-brands fa-google"></i> Google</div>
+                        <div class="brand-logo"><i class="fa-brands fa-microsoft"></i> Microsoft</div>
+                        <div class="brand-logo"><i class="fa-brands fa-slack"></i> Slack</div>
+                        <div class="brand-logo"><i class="fa-brands fa-apple"></i> Apple</div>
+                        <div class="brand-logo"><i class="fa-brands fa-figma"></i> Figma</div>
+                        <div class="brand-logo"><i class="fa-brands fa-stripe"></i> Stripe</div>
+                        <div class="brand-logo"><i class="fa-brands fa-github"></i> GitHub</div>
+                    </div>
                 </div>
             </div>
-        </main>
-    </div>
+        </section>
 
-    <div id="signup-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <button id="close-modal" class="close-modal-btn" aria-label="Close modal">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="modal-icon">
-                <i class="fa-solid fa-user-plus"></i>
+        <!-- 4. Features Section (Scroll Pinned stacked card deck) -->
+        <section id="features" class="features-pinned-wrapper">
+            <div class="features-sticky-container">
+                <div class="container features-grid-split">
+                    <!-- Left side: Feature Content Description (Catchy Words) -->
+                    <div class="features-left-col">
+                        <span class="section-tag">Capabilities</span>
+                        <div class="features-text-stack">
+                            <div class="feature-desc-item active" data-index="0">
+                                <h2 class="feature-title">Smart Task Management</h2>
+                                <div class="feature-badge">NLP PARSER</div>
+                                <p class="feature-text">Write freely. Our natural language parser converts notes into actionable, structured tasks instantly. No more tedious manual scheduling.</p>
+                                <ul class="feature-benefits">
+                                    <li><i class="fa-solid fa-circle-check"></i> Instantly recognizes dates & times</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Intelligent priority mapping</li>
+                                </ul>
+                            </div>
+                            <div class="feature-desc-item" data-index="1">
+                                <h2 class="feature-title">Google Calendar Sync</h2>
+                                <div class="feature-badge">BI-DIRECTIONAL SYNC</div>
+                                <p class="feature-text">Bi-directional synchronization ensures tasks appear as calendar events, keeping schedule and lists perfectly aligned in real time.</p>
+                                <ul class="feature-benefits">
+                                    <li><i class="fa-solid fa-circle-check"></i> Zero-latency cloud sync</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Automatic conflict resolution</li>
+                                </ul>
+                            </div>
+                            <div class="feature-desc-item" data-index="2">
+                                <h2 class="feature-title">Intelligent Reminders</h2>
+                                <div class="feature-badge">AI ALERT ENGINE</div>
+                                <p class="feature-text">Receive notifications exactly when you need them based on due dates, task importance, and historical work hours to maximize execution velocity.</p>
+                                <ul class="feature-benefits">
+                                    <li><i class="fa-solid fa-circle-check"></i> Smart notification gating</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Personalized alert schedules</li>
+                                </ul>
+                            </div>
+                            <div class="feature-desc-item" data-index="3">
+                                <h2 class="feature-title">Productivity Analytics</h2>
+                                <div class="feature-badge">ANALYTICS RADAR</div>
+                                <p class="feature-text">Monitor completion statistics daily. Visualize progress ratios and analyze task velocity with beautiful interactive indicators and charts.</p>
+                                <ul class="feature-benefits">
+                                    <li><i class="fa-solid fa-circle-check"></i> Daily progress tracking</li>
+                                    <li><i class="fa-solid fa-circle-check"></i> Personalized reports</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right side: Dynamic Stacked Card Deck -->
+                    <div class="features-right-col">
+                        <div class="features-card-deck">
+                            <!-- Card 1 -->
+                            <div class="features-deck-card active" data-index="0">
+                                <div class="deck-card-glow"></div>
+                                <div class="deck-card-content">
+                                    <div class="deck-card-icon"><i class="fa-solid fa-brain"></i></div>
+                                    <h3>Smart Tasks</h3>
+                                    <div class="deck-card-preview">
+                                        <div class="preview-task">"Write blog post tomorrow 9am"</div>
+                                        <div class="arrow-down"><i class="fa-solid fa-arrow-down-long"></i></div>
+                                        <div class="preview-task-result">
+                                            <div class="task-checkbox completed"><i class="fa-solid fa-check"></i></div>
+                                            <span class="task-title">Write blog post</span>
+                                            <span class="task-time">Tom. 9am</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Card 2 -->
+                            <div class="features-deck-card" data-index="1">
+                                <div class="deck-card-glow"></div>
+                                <div class="deck-card-content">
+                                    <div class="deck-card-icon"><i class="fa-brands fa-google"></i></div>
+                                    <h3>Google Sync</h3>
+                                    <div class="deck-card-preview">
+                                        <div class="calendar-sync-graphic">
+                                            <div class="calendar-node"><i class="fa-solid fa-circle-check"></i> TaskFlow</div>
+                                            <div class="sync-arrows"><i class="fa-solid fa-right-left"></i></div>
+                                            <div class="calendar-node google"><i class="fa-solid fa-calendar-days"></i> GCal</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Card 3 -->
+                            <div class="features-deck-card" data-index="2">
+                                <div class="deck-card-glow"></div>
+                                <div class="deck-card-content">
+                                    <div class="deck-card-icon"><i class="fa-solid fa-bell"></i></div>
+                                    <h3>AI Alerts</h3>
+                                    <div class="deck-card-preview">
+                                        <div class="reminder-graphic">
+                                            <div class="reminder-bell"><i class="fa-solid fa-bell"></i></div>
+                                            <div style="font-size: 0.8rem; font-weight: 700; margin-top: 0.5rem; color: #ffffff;">Urgent Sync Reminder</div>
+                                            <div style="font-size: 0.65rem; color: var(--text-slate);">Based on activity history</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Card 4 -->
+                            <div class="features-deck-card" data-index="3">
+                                <div class="deck-card-glow"></div>
+                                <div class="deck-card-content">
+                                    <div class="deck-card-icon"><i class="fa-solid fa-chart-line"></i></div>
+                                    <h3>Analytics</h3>
+                                    <div class="deck-card-preview">
+                                        <div class="analytics-graphic">
+                                            <div class="bar-chart">
+                                                <div class="bar" style="height: 40%"></div>
+                                                <div class="bar" style="height: 60%"></div>
+                                                <div class="bar" style="height: 95%"></div>
+                                                <div class="bar" style="height: 80%"></div>
+                                            </div>
+                                            <div style="font-size: 0.85rem; font-weight: 700; margin-top: 0.5rem; text-align: center; color: #ffffff;">94% Completion</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <h2>Join TaskFlow</h2>
-            <p>Sign up or log in to unlock personal task management and synchronization.</p>
-            <button id="google-signup-btn" class="google-signup-btn">
-                <i class="fa-brands fa-google"></i>
-                <span>Continue with Google</span>
-            </button>
-        </div>
-    </div>
+        </section>
 
-    <!-- History Modal -->
-    <div id="history-modal" class="modal-overlay hidden">
-        <div class="modal-content history-modal-content">
-            <button id="close-history-modal" class="close-modal-btn" aria-label="Close modal">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="history-header">
-                <h2><i class="fa-solid fa-clock-rotate-left"></i> Task History</h2>
+        <!-- 5. Interactive Dashboard Preview Section -->
+        <section id="preview" class="preview">
+            <div class="container">
+                <div class="reveal-el reveal-slide-up" style="text-align: center;">
+                    <span class="section-tag">Interactive Preview</span>
+                    <h2 class="section-title gradient-text">A workspace engineered for clarity</h2>
+                    <p class="section-desc" style="margin-left: auto; margin-right: auto;">Explore the different views engineered to match your personal planning philosophy and accelerate execution.</p>
+                </div>
+                
+                <!-- Tab Controls -->
+                <div class="preview-tabs reveal-el reveal-scale">
+                    <button class="tab-btn active" data-tab="tab-list">Task List</button>
+                    <button class="tab-btn" data-tab="tab-kanban">Kanban Board</button>
+                    <button class="tab-btn" data-tab="tab-stats">Productivity Charts</button>
+                    <button class="tab-btn" data-tab="tab-timeline">Activity Timeline</button>
+                </div>
+                
+                <!-- Tab Display -->
+                <div class="preview-display reveal-el reveal-slide-up">
+                    <!-- Pane 1: Task List -->
+                    <div class="preview-pane active" id="tab-list">
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div class="mockup-card task-item" style="padding: 1.25rem;">
+                                <div class="task-checkbox" style="width:20px; height:20px;"><i class="fa-solid fa-check"></i></div>
+                                <span class="task-title" style="font-size: 1rem;">Complete landing page design sprint</span>
+                                <div class="task-meta">
+                                    <span class="priority-badge high">High</span>
+                                </div>
+                            </div>
+                            <div class="mockup-card task-item completed" style="padding: 1.25rem;">
+                                <div class="task-checkbox" style="width:20px; height:20px;"><i class="fa-solid fa-check"></i></div>
+                                <span class="task-title" style="font-size: 1rem;">Configure postgreSQL prisma adapter</span>
+                                <div class="task-meta">
+                                    <span class="priority-badge medium">Medium</span>
+                                </div>
+                            </div>
+                            <div class="mockup-card task-item" style="padding: 1.25rem;">
+                                <div class="task-checkbox" style="width:20px; height:20px;"><i class="fa-solid fa-check"></i></div>
+                                <span class="task-title" style="font-size: 1rem;">Schedule product deployment call</span>
+                                <div class="task-meta">
+                                    <span class="priority-badge medium">Medium</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pane 2: Kanban Board -->
+                    <div class="preview-pane" id="tab-kanban">
+                        <div class="kanban-view">
+                            <div class="kanban-column">
+                                <div class="kanban-header">
+                                    <span class="column-title">Backlog</span>
+                                    <span class="column-count">3</span>
+                                </div>
+                                <div class="kanban-cards">
+                                    <div class="kanban-card">
+                                        <div class="kanban-card-title">Setup CI/CD pipeline</div>
+                                        <div class="kanban-card-bottom">
+                                            <span class="kanban-tag">DevOps</span>
+                                            <span>Jul 15</span>
+                                        </div>
+                                    </div>
+                                    <div class="kanban-card">
+                                        <div class="kanban-card-title">Write unit tests for auth</div>
+                                        <div class="kanban-card-bottom">
+                                            <span class="kanban-tag">Tests</span>
+                                            <span>Jul 12</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="kanban-column">
+                                <div class="kanban-header">
+                                    <span class="column-title">In Progress</span>
+                                    <span class="column-count">1</span>
+                                </div>
+                                <div class="kanban-cards">
+                                    <div class="kanban-card" style="border-left: 3px solid var(--primary);">
+                                        <div class="kanban-card-title">Integrate Google Calendar API</div>
+                                        <div class="kanban-card-bottom">
+                                            <span class="kanban-tag">Feature</span>
+                                            <span>Jul 11</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="kanban-column">
+                                <div class="kanban-header">
+                                    <span class="column-title">Completed</span>
+                                    <span class="column-count">4</span>
+                                </div>
+                                <div class="kanban-cards">
+                                    <div class="kanban-card" style="opacity: 0.6;">
+                                        <div class="kanban-card-title" style="text-decoration: line-through;">Initialize Prisma schema</div>
+                                        <div class="kanban-card-bottom">
+                                            <span class="kanban-tag">Database</span>
+                                            <span>Jul 09</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pane 3: Statistics Charts -->
+                    <div class="preview-pane" id="tab-stats">
+                        <div class="statistics-view">
+                            <div class="chart-card">
+                                <div class="chart-title">Tasks Completed (Weekly)</div>
+                                <div class="bar-chart">
+                                    <div class="chart-bar-wrapper">
+                                        <div class="chart-bar" style="height: 120px;"></div>
+                                        <span class="chart-bar-label">Mon</span>
+                                    </div>
+                                    <div class="chart-bar-wrapper">
+                                        <div class="chart-bar" style="height: 80px;"></div>
+                                        <span class="chart-bar-label">Tue</span>
+                                    </div>
+                                    <div class="chart-bar-wrapper">
+                                        <div class="chart-bar" style="height: 150px;"></div>
+                                        <span class="chart-bar-label">Wed</span>
+                                    </div>
+                                    <div class="chart-bar-wrapper">
+                                        <div class="chart-bar" style="height: 100px;"></div>
+                                        <span class="chart-bar-label">Thu</span>
+                                    </div>
+                                    <div class="chart-bar-wrapper">
+                                        <div class="chart-bar" style="height: 170px;"></div>
+                                        <span class="chart-bar-label">Fri</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                                <div class="chart-title" style="align-self: flex-start;">Category Distribution</div>
+                                <div style="position: relative; width: 140px; height: 140px; margin-bottom: 1.5rem;">
+                                    <svg width="140" height="140" viewBox="0 0 140 140">
+                                        <!-- Ring segments -->
+                                        <circle cx="70" cy="70" r="50" stroke="rgba(255,255,255,0.03)" stroke-width="12" fill="none"/>
+                                        <circle cx="70" cy="70" r="50" stroke="var(--primary)" stroke-width="12" fill="none" stroke-dasharray="314" stroke-dashoffset="120" style="transform: rotate(-90deg); transform-origin: 50% 50%;"/>
+                                        <circle cx="70" cy="70" r="50" stroke="var(--accent)" stroke-width="12" fill="none" stroke-dasharray="314" stroke-dashoffset="260" style="transform: rotate(50deg); transform-origin: 50% 50%;"/>
+                                    </svg>
+                                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 700; font-size: 1.1rem;">64%</div>
+                                </div>
+                                <div class="chart-legend">
+                                    <div class="legend-item"><span class="legend-color" style="background: var(--primary);"></span> Work Tasks</div>
+                                    <div class="legend-item"><span class="legend-color" style="background: var(--accent);"></span> Personal</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pane 4: Timeline -->
+                    <div class="preview-pane" id="tab-timeline">
+                        <div class="timeline-view">
+                            <div class="timeline-item">
+                                <span class="timeline-time">10:24 AM</span>
+                                <div class="timeline-content-card">
+                                    <div class="timeline-title">Task Marked Complete</div>
+                                    <p class="timeline-desc">"Prepare quarterly financial brief" was finished. Focus score increased by 4 points.</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time">09:15 AM</span>
+                                <div class="timeline-content-card">
+                                    <div class="timeline-title">Google Calendar Event Synced</div>
+                                    <p class="timeline-desc">Created calendar event for "Design Review Meeting" scheduled at 2:00 PM.</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="timeline-time">08:00 AM</span>
+                                <div class="timeline-content-card">
+                                    <div class="timeline-title">Daily Task List Generated</div>
+                                    <p class="timeline-desc">5 backlog tasks and 3 recurring items imported to "Today's Agenda".</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="history-body">
-                <ul id="history-list" class="history-list">
-                    <!-- History items injected here -->
-                </ul>
-                <div id="history-empty-state" class="history-empty-state hidden">
-                    <div class="history-empty-icon"><i class="fa-solid fa-clipboard-check"></i></div>
-                    <p>No task history found.</p>
+        </section>
+
+
+
+        <!-- 8. How It Works Section (Step cards animating into view) -->
+        <section id="how-it-works" class="how-it-works" style="border-top: 1px solid rgba(255,255,255,0.03); background: rgba(1, 3, 10, 0.25);">
+            <div class="container">
+                <div class="reveal-el reveal-slide-up">
+                    <span class="section-tag">Workflow</span>
+                    <h2 class="section-title gradient-text">How TaskFlow works</h2>
+                    <p class="section-desc">Get started in minutes with our clean, unified setup procedure.</p>
+                </div>
+                
+                <div class="steps-grid stagger-container reveal-el">
+                    <!-- Step 1 -->
+                    <div class="step-card stagger-item">
+                        <div class="step-num">01</div>
+                        <h3>Create Task</h3>
+                        <p>Add lists quickly on the fly from the homepage dashboard.</p>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="step-card stagger-item">
+                        <div class="step-num">02</div>
+                        <h3>Organize</h3>
+                        <p>Set custom tags, priority tags, and folder categories instantly.</p>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="step-card stagger-item">
+                        <div class="step-num">03</div>
+                        <h3>Track Progress</h3>
+                        <p>Watch metrics increment as tasks are checked off.</p>
+                    </div>
+                    
+                    <!-- Step 4 -->
+                    <div class="step-card stagger-item">
+                        <div class="step-num">04</div>
+                        <h3>Complete</h3>
+                        <p>Sync tasks safely to your Google Account workspace.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. Testimonials (Glass cards in auto-sliding carousel) -->
+        <section id="testimonials" class="testimonials">
+            <div class="container">
+                <div class="reveal-el reveal-slide-up" style="text-align: center;">
+                    <span class="section-tag">Reviews</span>
+                    <h2 class="section-title gradient-text">What productivity experts say</h2>
+                    <p class="section-desc" style="margin-left: auto; margin-right: auto;">Hear from startup founders, engineers, and creators who reorganized their focus using TaskFlow.</p>
+                </div>
+                
+                <!-- Carousel Container -->
+                <div class="testimonials-slider-container reveal-el reveal-scale">
+                    <!-- Control buttons -->
+                    <button class="carousel-control prev" aria-label="Previous Testimonial"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="carousel-control next" aria-label="Next Testimonial"><i class="fa-solid fa-chevron-right"></i></button>
+                    
+                    <div class="testimonials-wrapper">
+                        <!-- Slide 1 -->
+                        <div class="testimonial-slide active">
+                            <div class="testimonial-card">
+                                <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+                                <p class="testimonial-text">
+                                    "TaskFlow has completely overhauled how I manage my startup. The Google Calendar integration operates flawlessly, and the interactive analytics dashboard tells me exactly where my focus resides."
+                                </p>
+                                <div class="testimonial-user">
+                                    <div class="user-info">
+                                        <div class="user-name">Sarah Jenkins</div>
+                                        <div class="user-role">Founder, ScaleOut Studio</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slide 2 -->
+                        <div class="testimonial-slide">
+                            <div class="testimonial-card">
+                                <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+                                <p class="testimonial-text">
+                                    "As a frontend engineer, I'm extremely picky about design. TaskFlow is the first application that checks all boxes: incredibly fast performance, responsive layout, and gorgeous glassmorphism aesthetics."
+                                </p>
+                                <div class="testimonial-user">
+                                    <div class="user-info">
+                                        <div class="user-name">David Zhao</div>
+                                        <div class="user-role">Lead Engineer, AuthLayer</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slide 3 -->
+                        <div class="testimonial-slide">
+                            <div class="testimonial-card">
+                                <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+                                <p class="testimonial-text">
+                                    "The keyboard shortcuts and smart priority tagging make adding items effortless. I save hours every week by simply having my task dashboard double as calendar time-blocks."
+                                </p>
+                                <div class="testimonial-user">
+                                    <div class="user-info">
+                                        <div class="user-name">Elena Rostova</div>
+                                        <div class="user-role">Content Director, PixelMinds</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Navigation Dots -->
+                    <div class="carousel-dots">
+                        <div class="dot active"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. Pricing Section (Monthly/yearly toggle with professional plan highlighted) -->
+        <section id="pricing" class="pricing" style="border-top: 1px solid rgba(255,255,255,0.03); background: rgba(1, 3, 10, 0.35);">
+            <div class="container">
+                <div class="reveal-el reveal-slide-up" style="text-align: center;">
+                    <span class="section-tag">Subscriptions</span>
+                    <h2 class="section-title gradient-text">Plans for every work speed</h2>
+                    <p class="section-desc" style="margin-left: auto; margin-right: auto;">Unlock additional tasks, calendar events, and advanced analytics. Scale up as your projects grow.</p>
+                </div>
+                
+                <!-- Toggle switch -->
+                <div class="pricing-toggle-wrapper reveal-el reveal-scale">
+                    <span class="pricing-label active" id="monthly-lbl">Monthly</span>
+                    <button class="switch-toggle" id="price-toggle" aria-label="Toggle Monthly or Yearly Billing">
+                        <span class="switch-handle"></span>
+                    </button>
+                    <span class="pricing-label" id="yearly-lbl">Yearly</span>
+                    <span class="pricing-badge-discount">Save 20%</span>
+                </div>
+                
+                <div class="pricing-grid reveal-el reveal-slide-up">
+                    <!-- Plan 1: Starter -->
+                    <div class="pricing-card" data-monthly="0" data-yearly="0">
+                        <div class="pricing-card-header">
+                            <h3 class="plan-name">Starter</h3>
+                            <p class="plan-desc">For individuals organizing personal todos and workflows.</p>
+                        </div>
+                        <div class="pricing-card-price">
+                            <span class="price-currency">$</span>
+                            <span class="price-amount">0</span>
+                            <span class="price-period">/ mo</span>
+                        </div>
+                        <ul class="pricing-features-list">
+                            <li><i class="fa-solid fa-circle-check"></i> Up to 15 Active Tasks</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Standard Priority Tags</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Local Data Storage</li>
+                            <li class="disabled"><i class="fa-solid fa-circle-xmark"></i> Google Calendar Sync</li>
+                            <li class="disabled"><i class="fa-solid fa-circle-xmark"></i> Advanced Analytics</li>
+                        </ul>
+                        <a href="/app" class="btn btn-secondary">Get Started</a>
+                    </div>
+                    
+                    <!-- Plan 2: Pro (Highlighted) -->
+                    <div class="pricing-card popular" data-monthly="8" data-yearly="76">
+                        <span class="popular-badge">MOST POPULAR</span>
+                        <div class="pricing-card-header">
+                            <h3 class="plan-name">Professional</h3>
+                            <p class="plan-desc">For power users who need advanced calendar time-blocking.</p>
+                        </div>
+                        <div class="pricing-card-price">
+                            <span class="price-currency">$</span>
+                            <span class="price-amount">8</span>
+                            <span class="price-period">/ mo</span>
+                        </div>
+                        <ul class="pricing-features-list">
+                            <li><i class="fa-solid fa-circle-check"></i> Unlimited Active Tasks</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Priority Tags & Categories</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Cloud Synchronization</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Google Calendar Sync</li>
+                            <li class="disabled"><i class="fa-solid fa-circle-xmark"></i> Team Collaboration</li>
+                        </ul>
+                        <a href="/app" class="btn btn-primary">Try Professional Free</a>
+                    </div>
+                    
+                    <!-- Plan 3: Enterprise -->
+                    <div class="pricing-card" data-monthly="29" data-yearly="278">
+                        <div class="pricing-card-header">
+                            <h3 class="plan-name">Enterprise</h3>
+                            <p class="plan-desc">For businesses scaling task-tracking across distributed teams.</p>
+                        </div>
+                        <div class="pricing-card-price">
+                            <span class="price-currency">$</span>
+                            <span class="price-amount">29</span>
+                            <span class="price-period">/ mo</span>
+                        </div>
+                        <ul class="pricing-features-list">
+                            <li><i class="fa-solid fa-circle-check"></i> Everything in Professional</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Unlimited Team Workspaces</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Shared Board Collaborators</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Priority API Access</li>
+                            <li><i class="fa-solid fa-circle-check"></i> Dedicated Account Support</li>
+                        </ul>
+                        <a href="/app" class="btn btn-secondary">Contact Sales</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. FAQ Accordion Section -->
+        <section id="faq" class="faq">
+            <div class="container">
+                <div class="reveal-el reveal-slide-up" style="text-align: center;">
+                    <span class="section-tag">Q&A</span>
+                    <h2 class="section-title gradient-text">Frequently Asked Questions</h2>
+                    <p class="section-desc" style="margin-left: auto; margin-right: auto;">Have questions about TaskFlow? Explore quick answers below or contact our help desk.</p>
+                </div>
+                
+                <div class="faq-wrapper reveal-el reveal-slide-up">
+                    <!-- FAQ 1 -->
+                    <div class="faq-item">
+                        <div class="faq-header">
+                            <h3 class="faq-question">How does Google Calendar integration function?</h3>
+                            <div class="faq-icon-wrapper"><i class="fa-solid fa-plus"></i></div>
+                        </div>
+                        <div class="faq-body">
+                            <p class="faq-answer">
+                                When you authenticate your Google account in the dashboard, TaskFlow links directly to your calendar. Adding a task automatically creates a corresponding time block event on your calendar. Marking a task completed automatically marks the calendar event completed or removes it depending on your preference.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 2 -->
+                    <div class="faq-item">
+                        <div class="faq-header">
+                            <h3 class="faq-question">Can I use TaskFlow without creating an account?</h3>
+                            <div class="faq-icon-wrapper"><i class="fa-solid fa-plus"></i></div>
+                        </div>
+                        <div class="faq-body">
+                            <p class="faq-answer">
+                                Absolutely! You can create and manage tasks anonymously. Your data will be saved securely to your browser's local storage. However, you will need to sign in with Google to synchronize tasks across multiple devices or sync with your calendar.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 3 -->
+                    <div class="faq-item">
+                        <div class="faq-header">
+                            <h3 class="faq-question">Does TaskFlow support dark mode?</h3>
+                            <div class="faq-icon-wrapper"><i class="fa-solid fa-plus"></i></div>
+                        </div>
+                        <div class="faq-body">
+                            <p class="faq-answer">
+                                Yes, TaskFlow features a highly-optimized dark mode enabled by default to reduce eye fatigue. You can toggle between dark and light themes at any time from the settings icon in the top header.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 4 -->
+                    <div class="faq-item">
+                        <div class="faq-header">
+                            <h3 class="faq-question">Is my synchronization data private and secure?</h3>
+                            <div class="faq-icon-wrapper"><i class="fa-solid fa-plus"></i></div>
+                        </div>
+                        <div class="faq-body">
+                            <p class="faq-answer">
+                                Yes. All communications between the dashboard, databases, and Google APIs are encrypted using HTTPS/TLS. We do not sell user data. OAuth credentials are encrypted and stored in compliance with industry security protocols.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 12. Final CTA Section -->
+        <section id="cta" class="cta-section">
+            <div class="container reveal-el reveal-scale">
+                <div class="cta-box">
+                    <div class="cta-content">
+                        <h2 class="cta-title gradient-text">Ready to experience workflow clarity?</h2>
+                        <p class="cta-desc">Join thousands of high-performance professionals organizing their days, tracking their projects, and completing their goals with TaskFlow.</p>
+                        <a href="/app" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2.5rem; box-shadow: 0 10px 30px rgba(99,102,241,0.45);">Get Started For Free <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 13. Modern Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Info Column -->
+                <div class="footer-info">
+                    <a href="#hero" class="logo" style="margin-bottom: 0.5rem;">
+                        <div class="logo-icon">
+                            <i class="fa-solid fa-square-check"></i>
+                        </div>
+                        <div class="logo-text">Task<span>Flow</span></div>
+                    </a>
+                    <p class="footer-desc">
+                        Engineering premium productivity solutions to declutter workflows and accelerate daily goals.
+                    </p>
+                    <div class="footer-socials">
+                        <a href="#" class="social-link" aria-label="Follow us on Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="Follow us on GitHub"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="social-link" aria-label="Follow us on Dribbble"><i class="fa-brands fa-dribbble"></i></a>
+                        <a href="#" class="social-link" aria-label="Join our Discord channel"><i class="fa-brands fa-discord"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Links Column 1 -->
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#preview">Preview Mockup</a></li>
+                        <li><a href="#pricing">Pricing Plans</a></li>
+                        <li><a href="/app">Go To App</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Links Column 2 -->
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#faq">FAQ Help</a></li>
+                        <li><a href="#">Security Docs</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">API Reference</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter Column -->
+                <div class="footer-col footer-newsletter">
+                    <h4>Subscribe to updates</h4>
+                    <p class="footer-desc" style="max-width: 100%;">Get the latest product upgrades, productivity tips, and templates.</p>
+                    <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed!');">
+                        <input type="email" class="newsletter-input" placeholder="name@domain.com" required aria-label="Email address">
+                        <button type="submit" class="newsletter-btn" aria-label="Subscribe"><i class="fa-solid fa-chevron-right"></i></button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Bottom Copyright & Links -->
+            <div class="footer-bottom">
+                <p>&copy; 2026 TaskFlow Inc. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Cookies</a>
                 </div>
             </div>
         </div>
-    </div>
+    </footer>
 
-    <div id="toast-container" class="toast-container"></div>
-
-    <script src="script.js"></script>
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/cursor.js"></script>
+    <script src="js/counter.js"></script>
+    
+    <!-- Redesigned Navbar Modular Scripts -->
+    <script src="js/scroll.js?v=2.0"></script>
+    <script src="js/activeSection.js?v=2.0"></script>
+    <script src="js/mobileMenu.js?v=2.0"></script>
+    <script src="js/navbar.js?v=2.0"></script>
+    
+    <!-- Pinned Stacked Features Script -->
+    <script src="js/featuresSection.js?v=3.0"></script>
+    
+    <script src="js/carousel.js"></script>
 </body>
 </html>

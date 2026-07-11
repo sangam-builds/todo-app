@@ -41,7 +41,7 @@ export const googleLogin = (req, res) => {
 export const googleCallback = async (req, res) => {
   const { code } = req.query;
   if (!code) {
-    return res.redirect('/?error=no_auth_code_provided');
+    return res.redirect('/app?error=no_auth_code_provided');
   }
 
   try {
@@ -56,7 +56,7 @@ export const googleCallback = async (req, res) => {
     
     const payload = ticket.getPayload();
     if (!payload || !payload.email) {
-      return res.redirect('/?error=invalid_profile_payload');
+      return res.redirect('/app?error=invalid_profile_payload');
     }
 
     const googleId = payload.sub;
@@ -118,10 +118,10 @@ export const googleCallback = async (req, res) => {
     });
 
     // Redirect user back to the main dashboard
-    res.redirect('/');
+    res.redirect('/app');
   } catch (error) {
     console.error('Google OAuth callback failed:', error.message);
-    res.redirect('/?error=authentication_failed');
+    res.redirect('/app?error=authentication_failed');
   }
 };
 

@@ -38,6 +38,10 @@ pipeline {
         }
 
         stage('Test') {
+            environment {
+                DATABASE_URL = "postgresql://mock_user:mock_pass@localhost:5432/mock_db?schema=public"
+                JWT_SECRET = "placeholder-jwt-session-secret-key-32-chars-long"
+            }
             steps {
                 bat 'npm test'
             }

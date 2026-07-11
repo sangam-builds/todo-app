@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow // Premium Todo Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-decor">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+    
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-actions">
+                <button id="google-sync" class="google-sync-btn" aria-label="Sync with Google">
+                    <i class="fa-brands fa-google"></i>
+                    <span>Sync with Google</span>
+                </button>
+                <div id="user-profile" class="user-profile hidden">
+                    <img id="user-avatar" src="" alt="User Avatar" class="user-avatar">
+                    <span id="user-name" class="user-name"></span>
+                    <button id="history-btn" class="history-btn" aria-label="View History" title="View History">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </button>
+                    <button id="logout-btn" class="logout-btn" aria-label="Sign Out" title="Sign Out">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+            <div class="header-main">
+                <h1>TaskFlow</h1>
+                <span class="badge">v1.0</span>
+            </div>
+            <p class="subtitle">Organize your thoughts, elevate your productivity.</p>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <span class="stat-val" id="total-count">0</span>
+                    <span class="stat-lbl">Total Tasks</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-val" id="completed-count">0</span>
+                    <span class="stat-lbl">Completed</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-val" id="pending-count">0</span>
+                    <span class="stat-lbl">Pending</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-content">
+            <form id="todo-form" class="todo-input-group">
+                <input type="text" id="todo-input" placeholder="What needs to be done?" required autocomplete="off">
+                <button type="submit" aria-label="Add Task">
+                    <i class="fa-solid fa-plus"></i> Add
+                </button>
+            </form>
+
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="pending">Pending</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+            </div>
+
+            <div class="list-wrapper">
+                <ul id="todo-list" class="todo-list">
+                    <!-- Todos injected here -->
+                </ul>
+                <div id="empty-state" class="empty-state">
+                    <div class="empty-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                    <p>No tasks found. Create one to get started!</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="signup-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="close-modal" class="close-modal-btn" aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-icon">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <h2>Join TaskFlow</h2>
+            <p>Sign up or log in to unlock personal task management and synchronization.</p>
+            <button id="google-signup-btn" class="google-signup-btn">
+                <i class="fa-brands fa-google"></i>
+                <span>Continue with Google</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="history-modal" class="modal-overlay hidden">
+        <div class="modal-content history-modal-content">
+            <button id="close-history-modal" class="close-modal-btn" aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="history-header">
+                <h2><i class="fa-solid fa-clock-rotate-left"></i> Task History</h2>
+            </div>
+            <div class="history-body">
+                <ul id="history-list" class="history-list">
+                    <!-- History items injected here -->
+                </ul>
+                <div id="history-empty-state" class="history-empty-state hidden">
+                    <div class="history-empty-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                    <p>No task history found.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+/* ==========================================================================
+   SCROLL REVEAL INITIAL STATES & CLASSES
+   ========================================================================== */
+.reveal-el {
+    opacity: 0;
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity, filter;
+}
+
+.reveal-el.revealed,
+.reveal-fade-in.revealed {
+    opacity: 1;
+}
+
+.reveal-slide-up {
+    transform: translateY(40px);
+}
+.reveal-slide-up.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-slide-left {
+    transform: translateX(40px);
+}
+.reveal-slide-left.revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-scale {
+    transform: scale(0.92);
+}
+.reveal-scale.revealed {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.reveal-blur {
+    filter: blur(12px);
+    transform: translateY(20px);
+}
+.reveal-blur.revealed {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+/* Staggered Animations Setup */
+.stagger-container {
+    --stagger-delay: 100ms;
+}
+
+.stagger-item {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stagger-container.revealed .stagger-item,
+.stagger-container.active .stagger-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.stagger-container.revealed .stagger-item:nth-child(1) { transition-delay: calc(var(--stagger-delay) * 1); }
+.stagger-container.revealed .stagger-item:nth-child(2) { transition-delay: calc(var(--stagger-delay) * 2); }
+.stagger-container.revealed .stagger-item:nth-child(3) { transition-delay: calc(var(--stagger-delay) * 3); }
+.stagger-container.revealed .stagger-item:nth-child(4) { transition-delay: calc(var(--stagger-delay) * 4); }
+.stagger-container.revealed .stagger-item:nth-child(5) { transition-delay: calc(var(--stagger-delay) * 5); }
+.stagger-container.revealed .stagger-item:nth-child(6) { transition-delay: calc(var(--stagger-delay) * 6); }
+.stagger-container.revealed .stagger-item:nth-child(7) { transition-delay: calc(var(--stagger-delay) * 7); }
+.stagger-container.revealed .stagger-item:nth-child(8) { transition-delay: calc(var(--stagger-delay) * 8); }
+.stagger-container.revealed .stagger-item:nth-child(9) { transition-delay: calc(var(--stagger-delay) * 9); }
+.stagger-container.revealed .stagger-item:nth-child(10) { transition-delay: calc(var(--stagger-delay) * 10); }
+
+/* ==========================================================================
+   KEYFRAME ANIMATIONS
+   ========================================================================== */
+
+/* Spinner Rotation */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Floating Elements (Hero Mockup/Widgets) */
+@keyframes float-y-normal {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes float-y-reverse {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(12px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes float-widget-1 {
+    0% { transform: translateY(0) rotate(-1deg); }
+    50% { transform: translateY(-8px) rotate(1deg); }
+    100% { transform: translateY(0) rotate(-1deg); }
+}
+
+@keyframes float-widget-2 {
+    0% { transform: translateY(0) rotate(1deg); }
+    50% { transform: translateY(8px) rotate(-1deg); }
+    100% { transform: translateY(0) rotate(1deg); }
+}
+
+.float-normal {
+    animation: float-y-normal 6s ease-in-out infinite;
+}
+
+.float-reverse {
+    animation: float-y-reverse 6s ease-in-out infinite;
+}
+
+.float-w1 {
+    animation: float-widget-1 5s ease-in-out infinite;
+}
+
+.float-w2 {
+    animation: float-widget-2 5.5s ease-in-out infinite;
+}
+
+/* Scrolling Marquee */
+@keyframes marqueeScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+.marquee-content {
+    animation: marqueeScroll 35s linear infinite;
+}
+
+.marquee-wrapper:hover .marquee-content {
+    animation-play-state: paused;
+}
+
+/* Dashboard Tab Pane Transition */
+@keyframes revealPane {
+    from {
+        opacity: 0;
+        transform: scale(0.98) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* SVG dashed line animation */
+@keyframes dashOffset {
+    to {
+        stroke-dashoffset: -1000;
+    }
+}
+
+/* Dynamic Gradient Background Grid Mesh */
+@keyframes meshGradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Ambient Blobs Drifting */
+@keyframes blobDrift1 {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(50px, -60px) scale(1.1); }
+    66% { transform: translate(-30px, 40px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes blobDrift2 {
+    0% { transform: translate(0px, 0px) scale(1); }
+    50% { transform: translate(-60px, 50px) scale(1.05); }
+    100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.blob-drift-1 {
+    animation: blobDrift1 18s ease-in-out infinite;
+}
+
+.blob-drift-2 {
+    animation: blobDrift2 22s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   INTERACTIVE CURSOR GLOW EFFECT & PARALLAX
+   ========================================================================== */
+.cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    border-radius: 50%;
+    will-change: transform;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+body:hover .cursor-glow {
+    opacity: 1;
+}
+
+/* Scroll progress indicator top bar */
+.scroll-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 1001;
+    pointer-events: none;
+}
+
+.scroll-progress-bar {
+    height: 100%;
+    background: var(--gradient-primary);
+    width: 0%;
+    transition: width 0.1s ease-out;
+}
+
+/* Button ripple canvas element overlay */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    background: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+    animation: ripple-effect 0.6s linear;
+}
+
+@keyframes ripple-effect {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}

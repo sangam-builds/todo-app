@@ -1,0 +1,545 @@
+/* Pinned Stacked Features Section Styles */
+:root {
+    --features-card-width: 380px;
+    --features-card-height: 460px;
+}
+
+.features-pinned-wrapper {
+    position: relative;
+    width: 100%;
+    /* 4 cards, so we make it 400vh for a spacious scroll track */
+    height: 400vh;
+    background: transparent;
+}
+
+.features-sticky-container {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.features-grid-split {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: 4rem;
+    width: 100%;
+    height: 100%;
+    padding-top: 80px; /* Accounts for navbar */
+    padding-bottom: 40px;
+}
+
+/* Left Column Styling */
+.features-left-col {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.features-text-stack {
+    position: relative;
+    width: 100%;
+    height: 380px; /* Constrain height to prevent shifts */
+    margin-top: 1.5rem;
+}
+
+.feature-desc-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(8px);
+    pointer-events: none;
+    transition: 
+        opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+        transform 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+        filter 0.6s ease;
+}
+
+.feature-desc-item.active {
+    position: relative;
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+    pointer-events: auto;
+    z-index: 2;
+}
+
+.feature-title {
+    font-family: var(--font-jakarta);
+    font-size: 2.75rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #ffffff 30%, rgba(255, 255, 255, 0.6) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+[data-theme="light"] .feature-title {
+    background: linear-gradient(135deg, #111827 30%, #4B5563 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.feature-badge {
+    display: inline-block;
+    font-family: var(--font-geist);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    width: fit-content;
+}
+
+.feature-text {
+    font-size: 1.1rem;
+    color: var(--text-slate);
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+}
+
+.feature-benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.feature-benefits li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--text-slate);
+}
+
+.feature-benefits li i {
+    color: var(--accent);
+    font-size: 1rem;
+}
+
+/* Right Column (Deck) Styling */
+.features-right-col {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.features-card-deck {
+    position: relative;
+    width: var(--features-card-width);
+    height: var(--features-card-height);
+}
+
+/* Base Card Style */
+.features-deck-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--features-card-width);
+    height: var(--features-card-height);
+    transform: translate(-50%, -50%);
+    border-radius: 28px;
+    padding: 2.5rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    pointer-events: none; /* Let clicks pass through except when active */
+    
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+    
+    will-change: transform, opacity, filter;
+    transition: 
+        transform 0.75s cubic-bezier(0.25, 1, 0.3, 1),
+        opacity 0.6s cubic-bezier(0.25, 1, 0.3, 1),
+        filter 0.6s ease,
+        box-shadow 0.6s ease;
+}
+
+[data-theme="light"] .features-deck-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.5) 100%);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+}
+
+/* Card Glow Effect */
+.deck-card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.06) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.deck-card-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.deck-card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+.deck-card-icon i {
+    color: var(--text-white);
+    font-size: 1.35rem;
+}
+
+.features-deck-card h3 {
+    font-family: var(--font-jakarta);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text-white);
+}
+
+[data-theme="light"] .features-deck-card h3 {
+    color: #111827;
+}
+
+/* Deck Previews Inside Cards */
+.deck-card-preview {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    padding: 1.25rem;
+    overflow: hidden;
+}
+
+[data-theme="light"] .deck-card-preview {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Stacked Transforms - Card Positions */
+.features-deck-card[data-index="0"] {
+    transform: translate(-50%, -50%) rotate(-3deg) translate(0px, 0px);
+    z-index: 4;
+}
+
+.features-deck-card[data-index="1"] {
+    transform: translate(-50%, -50%) rotate(2deg) translate(4px, 6px);
+    z-index: 3;
+}
+
+.features-deck-card[data-index="2"] {
+    transform: translate(-50%, -50%) rotate(-1deg) translate(-4px, 12px);
+    z-index: 2;
+}
+
+.features-deck-card[data-index="3"] {
+    transform: translate(-50%, -50%) rotate(3deg) translate(6px, 18px);
+    z-index: 1;
+}
+
+/* Active State Transform overrides */
+.features-deck-card.active {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1.02) !important;
+    opacity: 1 !important;
+    filter: blur(0) !important;
+    z-index: 5 !important;
+    pointer-events: auto;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(99, 102, 241, 0.2);
+}
+
+[data-theme="light"] .features-deck-card.active {
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.06),
+        0 0 30px rgba(99, 102, 241, 0.08);
+}
+
+/* Fly Out State transform */
+.features-deck-card.slid-up {
+    transform: translate(-50%, -165%) rotate(-15deg) !important;
+    opacity: 0 !important;
+    filter: blur(6px) !important;
+    z-index: 0 !important;
+    pointer-events: none;
+}
+
+/* Graphics inside specific cards */
+.preview-task {
+    font-family: var(--font-geist);
+    font-size: 0.85rem;
+    color: var(--accent);
+    background: rgba(6, 182, 212, 0.1);
+    padding: 0.6rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    border-left: 3px solid var(--accent);
+    text-align: center;
+}
+
+.arrow-down {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+    animation: bounceSlow 1.5s infinite alternate;
+}
+
+@keyframes bounceSlow {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(4px); }
+}
+
+.preview-task-result {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 0.6rem;
+    border-radius: 10px;
+}
+
+.task-checkbox.completed {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.55rem;
+    color: #0b0f19;
+}
+
+.preview-task-result .task-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-white);
+}
+
+[data-theme="light"] .preview-task-result .task-title {
+    color: #111827;
+}
+
+.task-time {
+    margin-left: auto;
+    font-size: 0.7rem;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* Calendar Sync Graphic */
+.calendar-sync-graphic {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.calendar-node {
+    padding: 0.6rem 0.8rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text-white);
+}
+
+[data-theme="light"] .calendar-node {
+    background: #ffffff;
+    color: #111827;
+}
+
+.calendar-node.google {
+    border-color: rgba(239, 68, 68, 0.2);
+    color: #EF4444;
+}
+
+.sync-arrows {
+    color: var(--accent);
+    font-size: 0.95rem;
+    animation: pulseSync 1.5s infinite alternate;
+}
+
+@keyframes pulseSync {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.15); opacity: 1; }
+}
+
+/* Reminder bell graphic */
+.reminder-graphic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.reminder-bell {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #F59E0B;
+    font-size: 1.5rem;
+    animation: ringBell 2s infinite ease-in-out;
+}
+
+@keyframes ringBell {
+    0%, 100% { transform: rotate(0); }
+    15% { transform: rotate(15deg); }
+    30% { transform: rotate(-12deg); }
+    45% { transform: rotate(10deg); }
+    60% { transform: rotate(-8deg); }
+    75% { transform: rotate(4deg); }
+    90% { transform: rotate(-2deg); }
+}
+
+/* Analytics bar chart */
+.analytics-graphic {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.bar-chart {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 1.25rem;
+    height: 110px;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .bar-chart {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+.bar {
+    width: 28px;
+    border-radius: 6px 6px 0 0;
+    background: linear-gradient(to top, #6366F1, #8B5CF6);
+    animation: loadBars 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.bar:nth-child(2) { background: linear-gradient(to top, #8B5CF6, #a855f7); }
+.bar:nth-child(3) { background: linear-gradient(to top, #06B6D4, #3B82F6); }
+.bar:nth-child(4) { background: linear-gradient(to top, #EF4444, #F59E0B); }
+
+@keyframes loadBars {
+    0% { height: 0; }
+}
+
+/* Mobile View Fallbacks */
+@media (max-width: 1024px) {
+    .features-grid-split {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        padding-top: 100px;
+    }
+    
+    .features-pinned-wrapper {
+        height: auto; /* Turn off pinning */
+    }
+    
+    .features-sticky-container {
+        position: relative;
+        height: auto;
+        overflow: visible;
+        padding: 4rem 1.5rem;
+    }
+    
+    .features-text-stack {
+        height: auto;
+    }
+    
+    .feature-desc-item {
+        position: relative;
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        display: none;
+    }
+    
+    .feature-desc-item.active {
+        display: block;
+    }
+    
+    .features-card-deck {
+        width: 100%;
+        max-width: 380px;
+        height: var(--features-card-height);
+        position: relative;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --features-card-width: 290px;
+        --features-card-height: 400px;
+    }
+    
+    .feature-title {
+        font-size: 2rem;
+    }
+    
+    .features-deck-card {
+        padding: 1.5rem;
+    }
+    
+    .features-deck-card h3 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+}
