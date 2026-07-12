@@ -303,15 +303,16 @@ section[id], header[id] {
     text-decoration: none;
     color: var(--nav-text-color);
     font-family: var(--font-jakarta);
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     font-weight: 600;
-    padding: 0.55rem 1.3rem;
+    padding: 0.55rem 0.9rem;
     border-radius: 999px;
     background: transparent;
     display: inline-block;
     position: relative;
     z-index: 2; /* Text stands above sliding pill (z-index: 1) */
     overflow: hidden;
+    white-space: nowrap;
     will-change: color, transform;
     transition: 
         color 0.3s ease,
@@ -416,12 +417,13 @@ section[id], header[id] {
     text-decoration: none;
     color: var(--nav-text-color);
     font-family: var(--font-jakarta);
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     font-weight: 600;
-    padding: 0.6rem 1.25rem;
+    padding: 0.6rem 0.9rem;
     border-radius: 999px;
     border: 1px solid transparent;
     background: transparent;
+    white-space: nowrap;
     transition: all 0.3s ease;
 }
 
@@ -444,10 +446,10 @@ section[id], header[id] {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.65rem 1.6rem;
+    padding: 0.65rem 1.2rem;
     font-family: var(--font-jakarta);
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     color: var(--text-white) !important;
     background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
     border-radius: 999px;
@@ -456,6 +458,7 @@ section[id], header[id] {
     text-decoration: none;
     position: relative;
     overflow: hidden;
+    white-space: nowrap;
     box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
     will-change: transform, box-shadow;
     /* Soft magnetic snapping return */

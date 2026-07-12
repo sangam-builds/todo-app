@@ -43,6 +43,11 @@
     justify-content: center;
 }
 
+.features-left-col .section-tag {
+    align-self: center;
+    text-align: center;
+}
+
 .features-text-stack {
     position: relative;
     width: 100%;
@@ -451,7 +456,7 @@
     height: 100%;
 }
 
-.bar-chart {
+.feature-bar-chart {
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -461,7 +466,7 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-[data-theme="light"] .bar-chart {
+[data-theme="light"] .feature-bar-chart {
     border-bottom-color: rgba(0, 0, 0, 0.08);
 }
 
