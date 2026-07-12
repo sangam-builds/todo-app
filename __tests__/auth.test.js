@@ -1,5 +1,8 @@
 import { jest } from '@jest/globals';
 
+process.env.SUPABASE_URL = 'https://mock-supabase-url.supabase.co';
+process.env.SUPABASE_ANON_KEY = 'mock-supabase-anon-key-jwt-token-string';
+
 // 1. Mock Supabase Client JS library
 const mockSupabaseClient = {
   auth: {
