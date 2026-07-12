@@ -42,6 +42,25 @@
                 <span class="badge">v1.0</span>
             </div>
             <p class="subtitle">Organize your thoughts, elevate your productivity.</p>
+
+            <!-- Navigation Tabs -->
+            <div class="dashboard-nav">
+                <button class="dash-nav-btn active" data-pane="pane-todo">
+                    <i class="fa-solid fa-list-check"></i> Tasks
+                </button>
+                <button class="dash-nav-btn" data-pane="pane-kanban">
+                    <i class="fa-solid fa-table-columns"></i> Kanban
+                </button>
+                <button class="dash-nav-btn" data-pane="pane-stats">
+                    <i class="fa-solid fa-chart-line"></i> Analytics
+                </button>
+                <button class="dash-nav-btn" data-pane="pane-timeline">
+                    <i class="fa-solid fa-timeline"></i> Timeline
+                </button>
+                <button class="dash-nav-btn" data-pane="pane-billing">
+                    <i class="fa-solid fa-credit-card"></i> Billing
+                </button>
+            </div>
             
             <div class="stats-container">
                 <div class="stat-card">
@@ -60,26 +79,151 @@
         </header>
 
         <main class="app-content">
-            <form id="todo-form" class="todo-input-group">
-                <input type="text" id="todo-input" placeholder="What needs to be done?" required autocomplete="off">
-                <button type="submit" aria-label="Add Task">
-                    <i class="fa-solid fa-plus"></i> Add
-                </button>
-            </form>
+            <!-- Pane 1: Todo List -->
+            <div id="pane-todo" class="dashboard-pane active">
+                <form id="todo-form" class="todo-input-group">
+                    <input type="text" id="todo-input" placeholder="What needs to be done?" required autocomplete="off">
+                    <button type="submit" aria-label="Add Task">
+                        <i class="fa-solid fa-plus"></i> Add
+                    </button>
+                </form>
 
-            <div class="filter-bar">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="pending">Pending</button>
-                <button class="filter-btn" data-filter="completed">Completed</button>
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                </div>
+
+                <div class="list-wrapper">
+                    <ul id="todo-list" class="todo-list">
+                        <!-- Todos injected here -->
+                    </ul>
+                    <div id="empty-state" class="empty-state">
+                        <div class="empty-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                        <p>No tasks found. Create one to get started!</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="list-wrapper">
-                <ul id="todo-list" class="todo-list">
-                    <!-- Todos injected here -->
-                </ul>
-                <div id="empty-state" class="empty-state">
-                    <div class="empty-icon"><i class="fa-solid fa-clipboard-list"></i></div>
-                    <p>No tasks found. Create one to get started!</p>
+            <!-- Pane 2: Kanban Board -->
+            <div id="pane-kanban" class="dashboard-pane">
+                <div class="kanban-board">
+                    <div class="kanban-column" id="kanban-backlog">
+                        <div class="kanban-column-header">
+                            <h3>Backlog</h3>
+                            <span class="kanban-badge" id="kanban-backlog-count">0</span>
+                        </div>
+                        <div class="kanban-cards" id="kanban-backlog-cards">
+                            <!-- Cards injected here -->
+                        </div>
+                    </div>
+                    <div class="kanban-column" id="kanban-progress">
+                        <div class="kanban-column-header">
+                            <h3>In Progress</h3>
+                            <span class="kanban-badge" id="kanban-progress-count">0</span>
+                        </div>
+                        <div class="kanban-cards" id="kanban-progress-cards">
+                            <!-- Cards injected here -->
+                        </div>
+                    </div>
+                    <div class="kanban-column" id="kanban-completed">
+                        <div class="kanban-column-header">
+                            <h3>Completed</h3>
+                            <span class="kanban-badge" id="kanban-completed-count">0</span>
+                        </div>
+                        <div class="kanban-cards" id="kanban-completed-cards">
+                            <!-- Cards injected here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pane 3: Analytics / Productivity Charts -->
+            <div id="pane-stats" class="dashboard-pane">
+                <div class="analytics-dashboard">
+                    <div class="analytics-card chart-card-wide">
+                        <h4>Tasks Completed (Weekly)</h4>
+                        <div class="weekly-bar-chart" id="dashboard-bar-chart">
+                            <!-- Bars injected dynamically -->
+                        </div>
+                    </div>
+                    <div class="analytics-card progress-circle-card">
+                        <h4>Task Completion Ratio</h4>
+                        <div class="progress-ring-container">
+                            <svg width="120" height="120" viewBox="0 0 120 120">
+                                <circle class="progress-ring-bg" cx="60" cy="60" r="50" stroke-width="10" fill="none" />
+                                <circle class="progress-ring-fg" id="dashboard-progress-ring" cx="60" cy="60" r="50" stroke-width="10" fill="none" />
+                            </svg>
+                            <span class="progress-ring-percent" id="dashboard-progress-percent">0%</span>
+                        </div>
+                        <div class="analytics-metrics">
+                            <div class="metric"><span class="marker primary"></span> Pending</div>
+                            <div class="metric"><span class="marker success"></span> Completed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pane 4: Activity Timeline -->
+            <div id="pane-timeline" class="dashboard-pane">
+                <div class="activity-timeline" id="dashboard-timeline">
+                    <!-- Timeline logs injected dynamically -->
+                </div>
+            </div>
+
+            <!-- Pane 5: Billing Page -->
+            <div id="pane-billing" class="dashboard-pane">
+                <div class="billing-container">
+                    <div class="billing-hero">
+                        <div class="current-plan-card">
+                            <div>
+                                <span class="plan-tag">Current Plan</span>
+                                <h2>Developer Pro</h2>
+                                <p class="plan-desc">Advanced team sharing, Google integrations, and priority support.</p>
+                            </div>
+                            <div>
+                                <div class="plan-price">$12<span>/mo</span></div>
+                                <p class="plan-renews">Renews on Aug 12, 2026</p>
+                            </div>
+                        </div>
+                        <div class="billing-card payment-method-card">
+                            <h3>Payment Method</h3>
+                            <div class="credit-card-preview">
+                                <div class="card-chip"></div>
+                                <div class="card-number">•••• •••• •••• 4242</div>
+                                <div class="card-holder">Sangam Gupta</div>
+                                <div class="card-expiry">12/29</div>
+                                <div class="card-brand"><i class="fa-brands fa-cc-visa"></i></div>
+                            </div>
+                            <button class="upgrade-btn">Update Card</button>
+                        </div>
+                    </div>
+
+                    <div class="billing-history">
+                        <h3>Invoice History</h3>
+                        <div class="invoice-list">
+                            <div class="invoice-item">
+                                <div class="invoice-left">
+                                    <span class="invoice-date">Jul 12, 2026</span>
+                                    <span class="invoice-num">#INV-2026-004</span>
+                                </div>
+                                <div class="invoice-right">
+                                    <span class="invoice-amt">$12.00</span>
+                                    <span class="invoice-status success">Paid</span>
+                                </div>
+                            </div>
+                            <div class="invoice-item">
+                                <div class="invoice-left">
+                                    <span class="invoice-date">Jun 12, 2026</span>
+                                    <span class="invoice-num">#INV-2026-003</span>
+                                </div>
+                                <div class="invoice-right">
+                                    <span class="invoice-amt">$12.00</span>
+                                    <span class="invoice-status success">Paid</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -99,6 +243,63 @@
                 <i class="fa-brands fa-google"></i>
                 <span>Continue with Google</span>
             </button>
+        </div>
+    </div>
+
+    <!-- Task Creation Modal -->
+    <div id="task-modal" class="modal-overlay hidden">
+        <div class="modal-content task-modal-content">
+            <button id="close-task-modal" class="close-modal-btn" aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-icon">
+                <i class="fa-solid fa-circle-plus"></i>
+            </div>
+            <h2>Create New Task</h2>
+            <p>Define task parameters to sync across your timeline and board.</p>
+            
+            <form id="detailed-task-form" class="modal-form">
+                <div class="form-group">
+                    <label for="task-title">Task Name</label>
+                    <input type="text" id="task-title" placeholder="What needs to be done?" required autocomplete="off">
+                </div>
+                
+                <div class="form-group">
+                    <label for="task-deadline">Deadline Date & Time</label>
+                    <input type="datetime-local" id="task-deadline">
+                </div>
+                
+                <div class="form-group">
+                    <label>Priority Level</label>
+                    <div class="priority-selector">
+                        <label class="priority-pill low">
+                            <input type="radio" name="task-priority" value="LOW">
+                            <span>Low</span>
+                        </label>
+                        <label class="priority-pill medium">
+                            <input type="radio" name="task-priority" value="MEDIUM" checked>
+                            <span>Medium</span>
+                        </label>
+                        <label class="priority-pill high">
+                            <input type="radio" name="task-priority" value="HIGH">
+                            <span>High</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-container" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+                        <input type="checkbox" id="task-add-calendar">
+                        <span class="checkmark"></span>
+                        <span class="checkbox-label-text">Add to my Calendar</span>
+                    </label>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" id="cancel-task-btn" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="save-btn">Save Task</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -125,6 +326,8 @@
 
     <div id="toast-container" class="toast-container"></div>
 
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/dashboard.js"></script>
 </body>
 </html>

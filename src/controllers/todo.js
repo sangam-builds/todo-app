@@ -1,5 +1,4 @@
 import prisma from '../config/db.js';
-import { OAuth2Client } from 'google-auth-library';
 
 // @desc    Get all todos
 // @route   GET /api/todos
@@ -24,68 +23,75 @@ export const getTodos = async (req, res) => {
 // @access  Public
 export const createTodo = async (req, res) => {
   try {
-    const { title } = req.body;
+    const { title, deadline, priority, addToCalendar } = req.body;
     if (!title || typeof title !== 'string' || title.trim() === '') {
       return res.status(400).json({ error: 'Title is required' });
     }
 
     const userId = req.user ? req.user.id : null;
+    
+    // Parse inputs
+    const parsedDeadline = deadline ? new Date(deadline) : null;
+    const validatedPriority = ['LOW', 'MEDIUM', 'HIGH'].includes(String(priority).toUpperCase()) 
+      ? String(priority).toUpperCase() 
+      : 'MEDIUM';
+    const parsedAddToCalendar = Boolean(addToCalendar);
+
+    const googleProviderToken = req.headers['x-google-provider-token'];
+    let calendarEventId = null;
+
+    if (parsedAddToCalendar && parsedDeadline && googleProviderToken) {
+      try {
+        const calendarResponse = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${googleProviderToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            summary: `TaskFlow: ${title.trim()}`,
+            description: `Priority: ${validatedPriority}\nCreated via TaskFlow Premium Todo Dashboard`,
+            start: {
+              dateTime: parsedDeadline.toISOString(),
+              timeZone: 'UTC'
+            },
+            end: {
+              dateTime: new Date(parsedDeadline.getTime() + 60 * 60 * 1000).toISOString(),
+              timeZone: 'UTC'
+            },
+            reminders: {
+              useDefault: false,
+              overrides: [
+                { method: 'popup', minutes: 15 },
+                { method: 'email', minutes: 30 }
+              ]
+            }
+          })
+        });
+
+        if (calendarResponse.ok) {
+          const calendarData = await calendarResponse.json();
+          calendarEventId = calendarData.id;
+          console.log(`Successfully synced event to Google Calendar: ${calendarEventId}`);
+        } else {
+          const errText = await calendarResponse.text();
+          console.error(`Google Calendar API error (status ${calendarResponse.status}): ${errText}`);
+        }
+      } catch (err) {
+        console.error('Failed to sync to Google Calendar:', err.message);
+      }
+    }
+
     const newTodo = await prisma.todo.create({
       data: {
         title: title.trim(),
-        userId
+        userId,
+        deadline: parsedDeadline,
+        priority: validatedPriority,
+        addToCalendar: parsedAddToCalendar,
+        calendarEventId
       }
     });
-
-
-    // If user is authenticated, query their OAuth tokens and create calendar event
-    if (userId) {
-      try {
-        const user = await prisma.user.findUnique({
-          where: { id: userId }
-        });
-
-        if (user && user.accessToken) {
-          const oauth2Client = new OAuth2Client(
-            process.env.GOOGLE_CLIENT_ID,
-            process.env.GOOGLE_CLIENT_SECRET,
-            process.env.GOOGLE_CALLBACK_URL
-          );
-          oauth2Client.setCredentials({
-            access_token: user.accessToken,
-            refresh_token: user.refreshToken,
-          });
-
-          // Create event on user's primary Google Calendar
-          const response = await oauth2Client.request({
-            url: 'https://www.googleapis.com/calendar/v3/calendars/primary/events',
-            method: 'POST',
-            data: {
-              summary: newTodo.title,
-              description: 'Created automatically via TaskFlow Todo Dashboard',
-              start: {
-                dateTime: new Date().toISOString(),
-              },
-              end: {
-                dateTime: new Date(Date.now() + 3600000).toISOString(), // 1 hour duration
-              }
-            }
-          });
-          
-          const calendarEventId = response.data?.id;
-          if (calendarEventId) {
-            await prisma.todo.update({
-              where: { id: newTodo.id },
-              data: { calendarEventId }
-            });
-            newTodo.calendarEventId = calendarEventId;
-          }
-          console.log(`Successfully created Google Calendar event for: "${newTodo.title}"`);
-        }
-      } catch (calendarError) {
-        console.error('Failed to create Google Calendar event:', calendarError.message);
-      }
-    }
 
     res.status(201).json(newTodo);
   } catch (error) {
@@ -130,54 +136,6 @@ export const updateTodo = async (req, res) => {
       where: { id },
       data
     });
-
-    // If the todo has an associated Google Calendar event, update the event status
-    if (updatedTodo.calendarEventId && currentUserId) {
-      try {
-        const user = await prisma.user.findUnique({
-          where: { id: currentUserId }
-        });
-
-        if (user && user.accessToken) {
-          const oauth2Client = new OAuth2Client(
-            process.env.GOOGLE_CLIENT_ID,
-            process.env.GOOGLE_CLIENT_SECRET,
-            process.env.GOOGLE_CALLBACK_URL
-          );
-          oauth2Client.setCredentials({
-            access_token: user.accessToken,
-            refresh_token: user.refreshToken,
-          });
-
-          // Determine the updated event title and color
-          let newSummary = updatedTodo.title;
-          let colorId = null;
-
-          if (updatedTodo.completed) {
-            newSummary = `✔ ${updatedTodo.title}`;
-            colorId = '8'; // Graphite (Gray)
-          } else {
-            // Remove checkmark prefix if marking back to pending
-            if (newSummary.startsWith('✔ ')) {
-              newSummary = newSummary.substring(2);
-            }
-          }
-
-          await oauth2Client.request({
-            url: `https://www.googleapis.com/calendar/v3/calendars/primary/events/${updatedTodo.calendarEventId}`,
-            method: 'PATCH',
-            data: {
-              summary: newSummary,
-              colorId: colorId
-            }
-          });
-          console.log(`Successfully updated Google Calendar event status for: "${updatedTodo.title}"`);
-        }
-      } catch (calendarError) {
-        console.error('Failed to update Google Calendar event status:', calendarError.message);
-      }
-    }
-
     res.status(200).json(updatedTodo);
   } catch (error) {
     res.status(500).json({ error: error.message || 'Server Error' });

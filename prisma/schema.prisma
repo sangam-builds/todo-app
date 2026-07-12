@@ -7,16 +7,13 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  name         String?
-  googleId     String?  @unique
-  picture      String?
-  accessToken  String?
-  refreshToken String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  todos        Todo[]
+  id        String   @id
+  email     String   @unique
+  name      String?
+  picture   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  todos     Todo[]
 }
 
 model Todo {
@@ -30,4 +27,7 @@ model Todo {
   deletedAt       DateTime?
   userId          String?
   user            User?     @relation(fields: [userId], references: [id])
+  deadline        DateTime?
+  priority        String    @default("MEDIUM")
+  addToCalendar   Boolean   @default(false)
 }

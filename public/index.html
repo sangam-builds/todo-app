@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="css/features.css?v=3.0">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/auth-modal.css">
     
     <!-- Theme loading script (placed in head to avoid theme flash) -->
     <script src="js/theme.js?v=2.0"></script>
@@ -985,5 +986,50 @@
     <script src="js/featuresSection.js?v=3.0"></script>
     
     <script src="js/carousel.js"></script>
+
+    <!-- Auth Popup Modal -->
+    <div id="auth-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-auth-modal" class="close-btn" aria-label="Close modal">&times;</button>
+            <div class="auth-box">
+                <h2 id="auth-modal-title">Welcome back</h2>
+                <p id="auth-modal-subtitle" class="subtitle">Log in to your TaskFlow account</p>
+                
+                <form id="auth-form">
+                    <div class="form-group" id="name-group" style="display: none;">
+                        <label for="auth-name">Name</label>
+                        <input type="text" id="auth-name" placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="auth-email">Email Address</label>
+                        <input type="email" id="auth-email" required placeholder="name@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="auth-password">Password</label>
+                        <input type="password" id="auth-password" required placeholder="••••••••">
+                    </div>
+                    <div id="auth-error-msg" class="error-msg" style="display: none;"></div>
+                    <button type="submit" id="auth-submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.75rem;">Log In</button>
+                </form>
+                
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                
+                <button type="button" id="google-auth-btn" class="btn btn-google">
+                    <i class="fa-brands fa-google"></i> Continue with Google
+                </button>
+                
+                <p class="auth-toggle-text">
+                    Don't have an account? <span id="toggle-auth-mode">Sign up</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Auth modal controller script -->
+    <script src="js/auth-modal.js"></script>
 </body>
 </html>

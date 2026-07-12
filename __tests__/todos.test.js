@@ -29,8 +29,13 @@ const { default: app } = await import('../src/app.js');
 const { default: request } = await import('supertest');
 
 describe('Todo API Endpoints (/api/todos)', () => {
+  beforeAll(() => {
+    global.fetch = jest.fn();
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
+    global.fetch.mockReset();
   });
 
   describe('GET /api/todos', () => {
@@ -52,8 +57,8 @@ describe('Todo API Endpoints (/api/todos)', () => {
   });
 
   describe('POST /api/todos', () => {
-    it('should create a new todo anonymously', async () => {
-      const newTodo = { id: '3', title: 'New Anonymous Task', completed: false, userId: null, deleted: false };
+    it('should create a new todo anonymously with default priority and calendar values', async () => {
+      const newTodo = { id: '3', title: 'New Anonymous Task', completed: false, userId: null, deleted: false, deadline: null, priority: 'MEDIUM', addToCalendar: false };
       mockPrisma.todo.create.mockResolvedValue(newTodo);
 
       const res = await request(app)
@@ -66,9 +71,76 @@ describe('Todo API Endpoints (/api/todos)', () => {
       expect(mockPrisma.todo.create).toHaveBeenCalledWith({
         data: {
           title: 'New Anonymous Task',
-          userId: null
+          userId: null,
+          deadline: null,
+          priority: 'MEDIUM',
+          addToCalendar: false,
+          calendarEventId: null
         }
       });
+    });
+
+    it('should create a new todo with custom deadline, priority and calendar option', async () => {
+      const deadline = new Date().toISOString();
+      const newTodo = { id: '4', title: 'Task with fields', completed: false, userId: null, deleted: false, deadline, priority: 'HIGH', addToCalendar: true };
+      mockPrisma.todo.create.mockResolvedValue(newTodo);
+
+      const res = await request(app)
+        .post('/api/todos')
+        .send({
+          title: 'Task with fields',
+          deadline,
+          priority: 'HIGH',
+          addToCalendar: true
+        })
+        .expect(201);
+
+      expect(res.body.priority).toBe('HIGH');
+      expect(res.body.addToCalendar).toBe(true);
+      expect(mockPrisma.todo.create).toHaveBeenCalledWith({
+        data: {
+          title: 'Task with fields',
+          userId: null,
+          deadline: new Date(deadline),
+          priority: 'HIGH',
+          addToCalendar: true,
+          calendarEventId: null
+        }
+      });
+    });
+
+    it('should sync task to Google Calendar if addToCalendar is true and provider token is passed', async () => {
+      const deadline = new Date().toISOString();
+      const newTodo = { id: '5', title: 'Calendar Sync Task', completed: false, userId: null, deleted: false, deadline, priority: 'MEDIUM', addToCalendar: true, calendarEventId: 'mock-google-event-id-999' };
+      mockPrisma.todo.create.mockResolvedValue(newTodo);
+
+      // Mock Google Calendar API response
+      global.fetch.mockResolvedValue({
+        ok: true,
+        json: async () => ({ id: 'mock-google-event-id-999' })
+      });
+
+      const res = await request(app)
+        .post('/api/todos')
+        .set('X-Google-Provider-Token', 'mock-google-token')
+        .send({
+          title: 'Calendar Sync Task',
+          deadline,
+          priority: 'MEDIUM',
+          addToCalendar: true
+        })
+        .expect(201);
+
+      expect(res.body.calendarEventId).toBe('mock-google-event-id-999');
+      expect(global.fetch).toHaveBeenCalledWith(
+        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+        expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Authorization': 'Bearer mock-google-token'
+          })
+        })
+      );
     });
 
     it('should return 400 if title is missing', async () => {

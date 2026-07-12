@@ -1,12 +1,24 @@
 import { jest } from '@jest/globals';
-import jwt from 'jsonwebtoken';
 
-// 1. Mock DB module
+// 1. Mock Supabase Client JS library
+const mockSupabaseClient = {
+  auth: {
+    getUser: jest.fn(),
+    getSession: jest.fn(),
+  }
+};
+
+jest.unstable_mockModule('@supabase/supabase-js', () => ({
+  createClient: jest.fn(() => mockSupabaseClient)
+}));
+
+// 2. Mock DB module
 const mockPrisma = {
   user: {
     findUnique: jest.fn(),
-    upsert: jest.fn(),
-  }
+    create: jest.fn(),
+  },
+  $executeRaw: jest.fn()
 };
 
 jest.unstable_mockModule('../src/config/db.js', () => ({
@@ -14,75 +26,95 @@ jest.unstable_mockModule('../src/config/db.js', () => ({
   connectDB: jest.fn()
 }));
 
-// Dynamically import app & supertest
+// Dynamically import app & supertest after mocking modules
 const { default: app } = await import('../src/app.js');
 const { default: request } = await import('supertest');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'placeholder-jwt-session-secret-key-32-chars-long';
-
-describe('Auth API Endpoints (/api/auth)', () => {
+describe('Auth API & Security Layer (Supabase Integration)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('GET /api/auth/me', () => {
-    it('should return authenticated false if token cookie is absent', async () => {
+  describe('GET /api/auth/config', () => {
+    it('should return public Supabase credentials', async () => {
       const res = await request(app)
-        .get('/api/auth/me')
+        .get('/api/auth/config')
         .expect('Content-Type', /json/)
         .expect(200);
 
-      expect(res.body.authenticated).toBe(false);
-      expect(res.body.user).toBeUndefined();
-    });
-
-    it('should return authenticated true and user details if valid token is provided', async () => {
-      const userPayload = { id: 'user-123', email: 'test@example.com', name: 'Test User' };
-      const token = jwt.sign(userPayload, JWT_SECRET, { expiresIn: '1h' });
-
-      const res = await request(app)
-        .get('/api/auth/me')
-        .set('Cookie', [`token=${token}`])
-        .expect('Content-Type', /json/)
-        .expect(200);
-
-      expect(res.body.authenticated).toBe(true);
-      expect(res.body.user.email).toBe('test@example.com');
-      expect(res.body.user.id).toBe('user-123');
-    });
-
-    it('should return authenticated false if token is expired or malformed', async () => {
-      const res = await request(app)
-        .get('/api/auth/me')
-        .set('Cookie', ['token=invalid-malformed-token-string'])
-        .expect(200);
-
-      expect(res.body.authenticated).toBe(false);
+      expect(res.body).toHaveProperty('supabaseUrl');
+      expect(res.body).toHaveProperty('supabaseAnonKey');
     });
   });
 
-  describe('POST /api/auth/logout', () => {
-    it('should clear cookies and return success on logout', async () => {
+  describe('GET /app (Security Redirects)', () => {
+    it('should serve app.html shell for unauthenticated page loads (client-side JS handles redirection)', async () => {
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ data: { user: null }, error: null });
+
       const res = await request(app)
-        .post('/api/auth/logout')
+        .get('/app')
         .expect(200);
 
-      // Verify cookie header has clearCookie directive
-      const cookieHeader = res.headers['set-cookie'] || [];
-      expect(cookieHeader.some(c => c.includes('token=;'))).toBe(true);
-      expect(res.body.success).toBe(true);
-      expect(res.body.message).toBe('Successfully logged out');
+      expect(res.text).toContain('<!DOCTYPE html>');
     });
-  });
 
-  describe('GET /api/auth/google', () => {
-    it('should redirect to Google OAuth login screen', async () => {
+    it('should serve app.html and auto-sync user profile to local DB on valid token', async () => {
+      const mockUser = {
+        id: 'supabase-uuid-123',
+        email: 'test@example.com',
+        user_metadata: { name: 'Supabase User' }
+      };
+
+      // Mock Supabase getUser to return valid user profile
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ data: { user: mockUser }, error: null });
+      
+      // Mock local DB check to simulate a new user who is not registered locally yet
+      mockPrisma.user.findUnique.mockResolvedValue(null);
+      mockPrisma.user.create.mockResolvedValue({
+        id: mockUser.id,
+        email: mockUser.email,
+        name: 'Supabase User'
+      });
+
       const res = await request(app)
-        .get('/api/auth/google')
-        .expect(302);
+        .get('/app')
+        .set('Cookie', ['sb-access-token=mock-valid-jwt-token'])
+        .expect(200);
 
-      // Verify that it redirects to accounts.google.com
-      expect(res.headers.location).toContain('accounts.google.com');
+      expect(res.text).toContain('<!DOCTYPE html>');
+      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
+        where: { id: mockUser.id }
+      });
+      expect(mockPrisma.user.create).toHaveBeenCalled();
+    });
+
+    it('should migrate user ID when a user with the same email already exists under a different ID', async () => {
+      const mockUser = {
+        id: 'supabase-uuid-123',
+        email: 'existing@example.com',
+        user_metadata: { name: 'Supabase User' }
+      };
+
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ data: { user: mockUser }, error: null });
+      
+      // Mock findUnique sequentially: 
+      // 1. Check user by id -> null
+      // 2. Check user by email -> old user
+      // 3. Check user by id (post-migration) -> migrated user
+      mockPrisma.user.findUnique
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce({ id: 'old-cuid-123', email: 'existing@example.com', name: 'Old User' })
+        .mockResolvedValueOnce({ id: mockUser.id, email: mockUser.email, name: 'Supabase User' });
+
+      mockPrisma.$executeRaw.mockResolvedValue(1);
+
+      const res = await request(app)
+        .get('/app')
+        .set('Cookie', ['sb-access-token=mock-valid-jwt-token'])
+        .expect(200);
+
+      expect(res.text).toContain('<!DOCTYPE html>');
+      expect(mockPrisma.$executeRaw).toHaveBeenCalled();
     });
   });
 });
