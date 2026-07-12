@@ -6,6 +6,8 @@ import { parseUser } from './middlewares/auth.js';
 import todoRouter from './routes/todo.js';
 import authRouter from './routes/auth.js';
 
+import fs from 'fs';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -18,7 +20,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Serve Dashboard
 app.get('/app', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/app.html'));
+  const filePath = path.join(__dirname, '../public/app.html');
+  console.log(`[DEBUG] Serving /app. __dirname: ${__dirname}, filePath: ${filePath}, exists: ${fs.existsSync(filePath)}`);
+  res.sendFile(filePath);
 });
 
 // API Routes
