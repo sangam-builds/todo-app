@@ -24,7 +24,7 @@ Designed with a focus on modern DevOps practices, the project includes multi-sta
 *   **Frontend**: Vanilla HTML5, Vanilla CSS3 (Custom animations, theme management, responsive grid), Modern JavaScript.
 *   **Backend**: Node.js, Express.js.
 *   **Database & ORM**: PostgreSQL (Supabase), Prisma ORM.
-*   **Testing**: Jest, Supertest.
+*   **Testing**: Native Node.js Test Runner.
 *   **CI/CD**: Jenkins Declarative Pipelines, Docker.
 *   **Monitoring**: Prometheus, Grafana.
 
@@ -98,7 +98,7 @@ The workspace contains a declarative `Jenkinsfile` designed to automate code qua
 2.  **Checkout**: Pulls the latest commits from the active branch.
 3.  **Install Dependencies**: Installs development and production packages (`npm ci`).
 4.  **Generate Prisma Client**: Automatically generates the Prisma client binaries.
-5.  **Test**: Runs Jest unit and integration tests using mocked connection strings.
+5.  **Test**: Runs tests using the built-in Node.js test runner.
 6.  **Docker Login**: Secures credentials via Docker Hub integration (`docker-auth`).
 7.  **Build Docker Image**: Builds production-ready images with the build number tag and `latest`.
 8.  **Push Image**: Deploys the images to Docker Hub.

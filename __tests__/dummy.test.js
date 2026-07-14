@@ -1,7 +1,8 @@
-import { jest } from '@jest/globals';
+import { describe, it } from 'node:test';
+import assert from 'node:assert';
 
 describe('Dummy Test Suite', () => {
   it('should pass', () => {
-    expect(true).toBe(true);
+    assert.strictEqual(true, true);
   });
 });
